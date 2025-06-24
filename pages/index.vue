@@ -105,8 +105,6 @@ const toggleFaq = (index) => {
             v-show="item.isOpen"
             class="px-6 pb-4 text-gray-600 border-t border-gray-100"
           >
-            <i class="pi pi-check size-4"></i>
-            <p>jfizjizf</p>
             <p class="pt-4 leading-relaxed">{{ item.answer }}</p>
           </div>
         </div>
