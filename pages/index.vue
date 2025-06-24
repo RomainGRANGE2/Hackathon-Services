@@ -86,6 +86,62 @@ const toggleFaq = (index) => {
       </div>
     </div>
 
+    <!-- Section Présentation des Services -->
+    <div class="py-16 px-6">
+      <div class="max-w-6xl mx-auto">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <!-- Contenu texte à gauche -->
+          <div class="space-y-6">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-800">
+              Une plateforme complète pour vos projets digitaux
+            </h2>
+            <p class="text-lg text-gray-600 leading-relaxed">
+              Notre plateforme connecte entreprises et freelances qualifiés dans tous les domaines du digital. 
+              Développement web, design, marketing, data science... Trouvez l'expert qu'il vous faut en quelques clics.
+            </p>
+            <div class="space-y-4">
+              <div class="flex items-center space-x-3">
+                <div class="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
+                  <span class="text-white text-sm">✓</span>
+                </div>
+                <span class="text-gray-700">Profils vérifiés et compétences validées</span>
+              </div>
+              <div class="flex items-center space-x-3">
+                <div class="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
+                  <span class="text-white text-sm">✓</span>
+                </div>
+                <span class="text-gray-700">Paiement sécurisé et protection des projets</span>
+              </div>
+              <div class="flex items-center space-x-3">
+                <div class="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
+                  <span class="text-white text-sm">✓</span>
+                </div>
+                <span class="text-gray-700">Support client disponible 24/7</span>
+              </div>
+            </div>
+            <button class="bg-black hover:bg-gray-800 text-white px-8 py-3 rounded-lg font-semibold transition-colors">
+              Découvrir nos services
+            </button>
+          </div>
+          
+          <!-- Image à droite -->
+          <div class="relative">
+            <div class="bg-gradient-to-br from-blue-100 to-purple-100 rounded-2xl p-8 shadow-lg">
+              <img 
+                src="/assets/img/logo.png" 
+                alt="Services digitaux" 
+                class="w-full h-80 object-cover rounded-xl shadow-md"
+                onerror="this.src='https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80'"
+              />
+            </div>
+            <!-- Éléments décoratifs -->
+            <div class="absolute -top-4 -right-4 w-20 h-20 bg-yellow-400 rounded-full opacity-20"></div>
+            <div class="absolute -bottom-4 -left-4 w-16 h-16 bg-blue-400 rounded-full opacity-20"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4 mb-8 mt-8">
       <div 
         v-for="category in categories" 
