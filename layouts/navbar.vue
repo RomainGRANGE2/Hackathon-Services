@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="card">
-      <Menubar :model="items" :pt="ptMenuBar">
+      <Menubar :model="items" :pt="ptMenuBar" class="pt-5">
         <template #start>
           <a href="/" class="flex items-center gap-1">
             <img src="../assets/img/logo.png" alt="logo" class="h-10 w-auto rounded-md" />
@@ -39,6 +39,7 @@ const ptMenuBar = {
 const items = ref([
   {
     label: 'Nos offres',
+    href: '/offers',
     icon: 'pi pi-search',
   }
 ]);
