@@ -57,7 +57,6 @@ const toggleFaq = (index) => {
 
 <template>
   <div class="container">
-    <p class="cursor-pointer" @click="logout">Logout</p>
     
     <!-- Rangée de cartes de catégories -->
     <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4 mb-8 mt-8">
