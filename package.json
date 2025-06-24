@@ -26,5 +26,8 @@
   },
   "devDependencies": {
     "@primevue/nuxt-module": "^4.3.5"
+  },
+  "overrides": {
+    "estree-walker": "^2.0.2"
   }
 }
