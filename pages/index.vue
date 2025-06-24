@@ -57,8 +57,40 @@ const toggleFaq = (index) => {
 
 <template>
   <div class="container">
-    
-    <!-- Rangée de cartes de catégories -->
+    <div class="relative text-white py-24 px-6 rounded-xl mb-8 mt-8 overflow-hidden">
+      <video 
+        autoplay 
+        muted 
+        loop 
+        class="absolute inset-0 w-full h-full object-cover z-0"
+      >
+        <source src="/assets/animated-banner.mp4" type="video/mp4">
+      </video>
+      <div class="absolute inset-0 bg-black/40 z-10"></div>
+
+      <div class="relative z-20 max-w-5xl mx-auto text-center">
+        <h1 class="text-4xl md:text-5xl font-bold mb-6">
+          Trouvez le freelance idéal pour votre projet
+        </h1>
+        <p class="text-xl mb-8 text-blue-100">
+          Connectez-vous avec des experts qualifiés dans tous les domaines du digital
+        </p>
+
+        <div class="max-w-2xl mx-auto">
+          <div class="relative">
+            <input
+              type="text"
+              placeholder="Rechercher un métier, une compétence ou une technologie..."
+              class="w-full px-6 py-3 text-gray-800 rounded-full text-lg focus:outline-none focus:ring-4 focus:ring-white/20 shadow-lg"
+            />
+            <button class="absolute right-2 top-1.5 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-full transition-colors">
+              🔍
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4 mb-8 mt-8">
       <div 
         v-for="category in categories" 
@@ -78,7 +110,6 @@ const toggleFaq = (index) => {
       </div>
     </div>
 
-    <!-- Section FAQ -->
     <div class="mt-12 mb-8">
       <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Questions Fréquentes</h2>
       
