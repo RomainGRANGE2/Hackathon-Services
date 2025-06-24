@@ -76,7 +76,7 @@ const messagePt = {
 
 
 <template>
-  <div class="h-screen flex gap-6 p-6 bg-slate-50">
+  <div class="h-screen flex gap-6 p-6 bg-primary-100">
     <div class="flex flex-row w-full h-full justify-center items-center">
       <Toast :pt="toastPt" />
       <div class="flex flex-col w-full sm:w-3/4 md:w-1/2 lg:w-1/2 xl:w-1/4 gap-10 ">
@@ -196,7 +196,7 @@ const messagePt = {
                 class="w-full"
             />
           </div>
-          <p class="text-center cursor-pointer text-primary text-sm" @click="navigateTo('/auth')">Se connecter</p>
+          <p class="text-center cursor-pointer text-primary-400 text-sm" @click="navigateTo('/auth')">Se connecter</p>
         </Form>
       </div>
     </div>

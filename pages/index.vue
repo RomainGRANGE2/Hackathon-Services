@@ -1,7 +1,12 @@
+<script setup>
+definePageMeta({
+  middleware: ["auth"],
+  layout: "navbar",
+});
+</script>
+
 <template>
-  <NuxtLayout name="navbar">
-    <div class="container">
-      <p>INDEX</p>
-    </div>
-  </NuxtLayout>
+  <div class="container">
+    <p>INDEX</p>
+  </div>
 </template>
