@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="card">
-      <Menubar :model="items" :pt="ptMenuBar">
+      <Menubar :model="items" :pt="ptMenuBar" class="pt-5">
         <template #start>
           <a href="/" class="flex items-center gap-1">
             <img src="../assets/img/logo.png" alt="logo" class="h-10 w-auto rounded-md" />
@@ -9,10 +9,11 @@
           </a>
         </template>
         <template #item="{ item, props, hasSubmenu, root }">
-          <a v-ripple class="flex items-center" v-bind="props.action">
+          <a v-ripple class="flex items-center" v-bind="props.action" :href="item.href || '#'" :class="{ 'cursor-pointer': item.href }">
             <span>{{ item.label }}</span>
             <Badge v-if="item.badge" :class="{ 'ml-auto': !root, 'ml-2': root }" :value="item.badge" />
             <span v-if="item.shortcut" class="ml-auto border border-surface rounded bg-emphasis text-muted-color text-xs p-1">{{ item.shortcut }}</span>
+            <i v-if="hasSubmenu" :class="['pi pi-angle-down ml-auto', { 'pi-angle-down': root, 'pi-angle-right': !root }]"></i>
           </a>
         </template>
         <template #end>
@@ -38,6 +39,7 @@ const ptMenuBar = {
 const items = ref([
   {
     label: 'Nos offres',
+    href: '/services/list',
     icon: 'pi pi-search',
   }
 ]);
