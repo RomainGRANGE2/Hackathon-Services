@@ -122,9 +122,9 @@ const messagePt = {
           </div>
 
           <div class="flex items-center gap-x-2">
-            <span>Client</span>
+            <span class="text-xs">Client</span>
             <ToggleSwitch v-model="form.role" />
-            <span>Prestataire</span>
+            <span class="text-xs">Prestataire</span>
           </div>
 
           <div v-if="form.role" class="flex flex-col gap-2">
@@ -196,6 +196,7 @@ const messagePt = {
                 class="w-full"
             />
           </div>
+          <p class="text-center cursor-pointer text-primary text-sm" @click="navigateTo('/auth')">Se connecter</p>
         </Form>
       </div>
     </div>

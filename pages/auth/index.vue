@@ -115,6 +115,7 @@ const messagePt = {
                 class="w-full"
             />
           </div>
+          <p class="text-center cursor-pointer text-primary text-sm" @click="navigateTo('/auth/register')">Créer un compte</p>
         </Form>
       </div>
     </div>
