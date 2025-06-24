@@ -9,7 +9,7 @@
           </a>
         </template>
         <template #item="{ item, props, hasSubmenu, root }">
-          <a v-ripple class="flex items-center" v-bind="props.action">
+          <a v-ripple class="flex items-center" v-bind="props.action" :href="item.href || '#'" :class="{ 'cursor-pointer': item.href }">
             <span>{{ item.label }}</span>
             <Badge v-if="item.badge" :class="{ 'ml-auto': !root, 'ml-2': root }" :value="item.badge" />
             <span v-if="item.shortcut" class="ml-auto border border-surface rounded bg-emphasis text-muted-color text-xs p-1">{{ item.shortcut }}</span>
@@ -40,6 +40,7 @@ const ptMenuBar = {
 const items = ref([
   {
     label: 'Nos offres',
+    href: '/services/list',
     icon: 'pi pi-search',
   }
 ]);
