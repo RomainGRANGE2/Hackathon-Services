@@ -65,7 +65,7 @@ const toggleFaq = (index) => {
 
       <div class="relative z-20 max-w-5xl mx-auto text-center">
         <h1 class="text-4xl md:text-5xl font-bold mb-6">
-          Trouvez le freelance idéal pour votre projet
+          Trouvez le <span class="bg-gradient-to-r from-blue-300 to-purple-300 bg-clip-text text-transparent drop-shadow-lg">freelance</span> idéal pour votre projet
         </h1>
         <p class="text-xl mb-8 text-blue-100">
           Connectez-vous avec des experts qualifiés dans tous les domaines du digital
