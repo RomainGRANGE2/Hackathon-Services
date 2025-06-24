@@ -2,7 +2,7 @@ import {z} from "zod";
 import {http} from "~/server/utils/http.js";
 import {user} from "~/server/utils/user.js";
 const { unAuthorized, badRequest } = http()
-const { getUserByEmail } = user()
+const { getUserByEmailAndVerify } = user()
 
 const buildSchema = (event) => z.object({
     email: z.string().email(),
@@ -19,7 +19,7 @@ export default defineEventHandler(async (event) => {
     const { email, password } = await readBody(event)
 
     try {
-        const result = await getUserByEmail(email)
+        const result = await getUserByEmailAndVerify(email)
 
         if (result.length === 0) {
             unAuthorized()

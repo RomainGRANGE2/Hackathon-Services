@@ -8,6 +8,25 @@ definePageMeta({
 const route = useRoute()
 const router = useRouter()
 
+onMounted(() => {
+  if (!!route.query.emailsend || !!route.query.verifyaccount){
+    if (route.query.emailsend === "true"){
+      toast.add({
+        severity: 'success',
+        summary: 'Mail de confirmation envoyé',
+        life: 10000,
+      })
+    } else if (route.query.verifyaccount === "true"){
+      toast.add({
+        severity: "success",
+        summary: "Votre compte a été vérifié",
+        life: 5000,
+      });
+    }
+    router.replace({ query: null });
+  }
+})
+
 const toast = useToast()
 
 const loading = ref(false)

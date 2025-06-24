@@ -25,7 +25,7 @@ const onFormSubmit = async function (e) {
       method: "POST",
       body: form.value,
     }).then(async (result) => {
-       navigateTo("/auth");
+       navigateTo("/auth?emailsend=true");
     }).catch((error) => {
       toast.add({
         severity: "error",
