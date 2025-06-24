@@ -128,7 +128,7 @@ const toggleFaq = (index) => {
           <div class="relative">
             <div class="bg-gradient-to-br from-blue-100 to-purple-100 rounded-2xl p-8 shadow-lg">
               <img 
-                src="/assets/img/logo.png" 
+                src="/assets/img/man-work.png" 
                 alt="Services digitaux" 
                 class="w-full h-80 object-cover rounded-xl shadow-md"
                 onerror="this.src='https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80'"
