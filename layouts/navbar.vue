@@ -18,7 +18,6 @@
         <template #end>
           <div class="flex items-center gap-4">
             <button class="cursor-pointer text-prime-vue-error bg-red-100 p-2 rounded-lg px-4" @click="logout">Logout</button>
-            <Avatar image="https://primefaces.org/cdn/primevue/images/avatar/amyelsner.png" shape="circle" />
           </div>
         </template>
       </Menubar>

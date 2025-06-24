@@ -1,13 +1,7 @@
 <script setup>
 definePageMeta({
-  middleware: ["auth"],
   layout: "navbar",
 });
-
-const logout = async function (){
-  await clear()
-  navigateTo("/auth")
-}
 
 // Catégories de métiers digitaux
 const categories = [
@@ -57,7 +51,6 @@ const toggleFaq = (index) => {
 
 <template>
   <div class="container">
-    
     <!-- Bannière avec titre et recherche -->
     <div class="relative text-white py-24 px-6 rounded-xl mb-8 mt-8 overflow-hidden">
       <!-- Vidéo en arrière-plan -->
