@@ -1,4 +1,6 @@
 <script setup>
+import {HomeIcon} from "@heroicons/vue/24/solid/index.js";
+
 const { fetch: refreshSession } = useUserSession();
 
 const toast = useToast();
@@ -60,6 +62,10 @@ const resolver = ({ values }) => {
   return { errors };
 };
 
+const goToHome = function (){
+  navigateTo('/')
+}
+
 const toastPt = {
   messageText: "!block",
   messageContent: "!items-center !justify-center",
@@ -76,7 +82,10 @@ const messagePt = {
 
 
 <template>
-  <div class="h-screen flex gap-6 p-6 bg-primary-100">
+  <div class="h-screen flex gap-6 p-6 bg-primary-100 relative">
+    <div class="absolute top-4 left-4">
+      <HomeIcon class="size-6 cursor-pointer" @click="goToHome()" />
+    </div>
     <div class="flex flex-row w-full h-full justify-center items-center">
       <Toast :pt="toastPt" />
       <div class="flex flex-col w-full sm:w-3/4 md:w-1/2 lg:w-1/2 xl:w-1/4 gap-10 ">
