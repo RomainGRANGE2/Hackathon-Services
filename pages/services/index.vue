@@ -17,12 +17,14 @@ onMounted(async () => {
     // Récupérer le paramètre de recherche depuis l'URL
     const route = useRoute();
     searchQuery.value = route.query.search || '';
-    
+
     // Si on a une recherche, utiliser l'endpoint de recherche IA, sinon la liste normale
     const endpoint = searchQuery.value
       ? '/api/services/search'
       : '/api/services/list';
-    const payload = searchQuery.value ? { query: searchQuery.value } : undefined;
+    const payload = searchQuery.value
+      ? { query: searchQuery.value }
+      : undefined;
 
     const response = payload
       ? await $fetch(endpoint, { method: 'POST', body: payload })

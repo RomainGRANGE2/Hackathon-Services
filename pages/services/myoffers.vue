@@ -27,7 +27,9 @@ const { user } = useUserSession();
 onMounted(async () => {
   try {
     // Vérifier que l'utilisateur est connecté
+    console.log('Utilisateur dans myoffers:', user.value);
     if (!user.value || !user.value.id) {
+      console.log('Pas d\'utilisateur connecté, redirection vers /auth');
       toast.add({
         severity: 'error',
         summary: 'Accès refusé',
@@ -39,8 +41,12 @@ onMounted(async () => {
       return;
     }
 
+    console.log('Appel de l\'API /api/services/my-offers');
     const response = await $fetch('/api/services/my-offers');
+    console.log('Réponse de l\'API my-offers:', response);
+    
     if (response.success) {
+      console.log('Services reçus:', response.services);
       // L'API retourne directement les services du prestataire connecté
       services.value = response.services.map((service) => {
         if (service.tag && typeof service.tag === 'string') {
@@ -54,7 +60,9 @@ onMounted(async () => {
         }
         return service;
       });
+      console.log('Services après traitement:', services.value);
     } else {
+      console.log('Erreur API:', response.error);
       toast.add({
         severity: 'error',
         summary: 'Erreur',
