@@ -104,14 +104,12 @@ const navigateToDetails = (id) => {
         <div
           class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
         >
-          <div v-for="service in services" :key="service.id" class="p-2">
+          <div v-for="(service,i) in services" :key="service.id" class="p-2">
             <Card class="h-full shadow-md rounded-xl overflow-hidden">
               <template #header>
                 <div class="h-40 bg-gray-200 flex items-center justify-center">
-                  <i class="pi pi-box text-4xl" v-if="!service.image"></i>
                   <img
-                    v-else
-                    :src="service.image"
+                    :src="`https://picsum.photos/500/50${i}`"
                     :alt="service.title"
                     class="h-full w-full object-cover"
                   />
