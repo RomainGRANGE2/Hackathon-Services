@@ -10,53 +10,75 @@ definePageMeta({
 const services = ref([])
 const loading = ref(true)
 const toast = useToast()
+const route = useRoute()
 
-onMounted(async () => {
-  try {
-    const response = await $fetch('/api/services/list')
-    if (response.success) {
-      services.value = response.services.map(service => {
-        if (service.tag && typeof service.tag === 'string') {
-          try {
-            service.tag = JSON.parse(service.tag)
-          } catch (e) {
-            service.tag = []
-          }
-        } else if (!service.tag) {
+// Récupérer le paramètre de recherche depuis l'URL
+const searchQuery = route.query.search || ''
+
+try {
+  // Si on a une recherche, utiliser l'endpoint de recherche IA, sinon la liste normale
+  const endpoint = searchQuery ? '/api/services/search' : '/api/services/list'
+  const payload = searchQuery ? { query: searchQuery } : undefined
+  
+  const response = payload 
+    ? await $fetch(endpoint, { method: 'POST', body: payload })
+    : await $fetch(endpoint)
+  if (response.success) {
+    services.value = response.services.map(service => {
+      if (service.tag && typeof service.tag === 'string') {
+        try {
+          service.tag = JSON.parse(service.tag)
+        } catch (e) {
           service.tag = []
         }
-        return service
-      })
-    } else {
-      toast.add({
-        severity: 'error',
-        summary: 'Erreur',
-        detail: 'Impossible de récupérer la liste de vos services',
-        life: 3000
-      })
-    }
-  } catch (error) {
+      } else if (!service.tag) {
+        service.tag = []
+      }
+      return service
+    })
+  } else {
     toast.add({
       severity: 'error',
       summary: 'Erreur',
-      detail: 'Une erreur s\'est produite lors de la récupération des services',
+      detail: 'Impossible de récupérer la liste de vos services',
       life: 3000
     })
-    console.error(error)
-  } finally {
-    loading.value = false
   }
-})
+} catch (error) {
+  toast.add({
+    severity: 'error',
+    summary: 'Erreur',
+    detail: 'Une erreur s\'est produite lors de la récupération des services',
+    life: 3000
+  })
+  console.error(error)
+} finally {
+  loading.value = false
+}
 
 const navigateToDetails = (id) => {
-  navigateTo(`/services/list/${id}`)
+  navigateTo(`/services/${id}`)
 }
 </script>
 
 <template>
   <div class="container mx-auto p-4">
     <Toast />
-    <h1 class="text-2xl font-bold mb-6">Services</h1>
+    <div class="flex justify-between items-center mb-6">
+      <div>
+        <h1 class="text-2xl font-bold">Services</h1>
+        <p v-if="searchQuery" class="text-gray-600 mt-1">
+          Résultats pour : "{{ searchQuery }}"
+          <Button 
+            label="Voir tous les services" 
+            text 
+            size="small" 
+            class="ml-2" 
+            @click="navigateTo('/services')" 
+          />
+        </p>
+      </div>
+    </div>
     <div v-if="loading" class="flex justify-center">
       <ProgressSpinner />
     </div>

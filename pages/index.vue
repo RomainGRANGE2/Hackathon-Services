@@ -3,6 +3,23 @@ definePageMeta({
   layout: "navbar",
 });
 
+// Variable pour stocker la recherche
+const searchQuery = ref('')
+
+// Fonction pour gérer la recherche
+const handleSearch = () => {
+  if (searchQuery.value.trim()) {
+    navigateTo(`/services?search=${encodeURIComponent(searchQuery.value.trim())}`)
+  }
+}
+
+// Fonction pour gérer la soumission avec Entrée
+const handleKeyPress = (event) => {
+  if (event.key === 'Enter') {
+    handleSearch()
+  }
+}
+
 // Catégories de métiers digitaux
 const categories = [
   { icon: '💻', name: 'Développement', color: 'bg-blue-500' },
@@ -74,11 +91,16 @@ const toggleFaq = (index) => {
         <div class="max-w-2xl mx-auto">
           <div class="relative">
             <input
+              v-model="searchQuery"
               type="text"
               placeholder="Rechercher un métier, une compétence ou une technologie..."
               class="w-full px-6 py-3 text-gray-800 rounded-full text-lg focus:outline-none focus:ring-4 focus:ring-white/20 shadow-lg"
+              @keypress="handleKeyPress"
             />
-            <button class="absolute right-2 top-1.5 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-full transition-colors">
+            <button 
+              @click="handleSearch"
+              class="absolute right-2 top-1.5 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-full transition-colors"
+            >
               🔍
             </button>
           </div>
