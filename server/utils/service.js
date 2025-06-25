@@ -28,8 +28,26 @@ export const service = () => {
     const getServicesByUserId = async function(userId) {
         try {
             const result = await query(
-                'SELECT * FROM "service" WHERE user_id = $1 ORDER BY created_at DESC',
+                'SELECT * FROM "service" WHERE user_id = $1',
                 [userId]
+            )
+            return result.rows
+        } catch (error) {
+            throw error
+        }
+    }
+
+    const createService = async function(body,userId) {
+        console.log(body)
+        try {
+            const result = await query(
+                'INSERT INTO "service" (user_id, title,description, price) VALUES ($1, $2, $3, $4)',
+                [
+                   userId,
+                    body.title,
+                    body.description,
+                    body.price,
+                ]
             )
             return result.rows
         } catch (error) {
@@ -40,6 +58,7 @@ export const service = () => {
     return {
         getAllServices,
         getServiceById,
-        getServicesByUserId
+        getServicesByUserId,
+        createService
     }
 }

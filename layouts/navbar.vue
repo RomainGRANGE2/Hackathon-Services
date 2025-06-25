@@ -124,8 +124,13 @@ const ptMenuBar = {
 
 const items = ref([
   {
-    label: 'Nos offres',
-    href: '/services/list',
+    label: 'Services',
+    href: '/services',
+    icon: 'pi pi-search',
+  },
+  {
+    label: 'Mes offres',
+    href: '/services/myoffers',
     icon: 'pi pi-search',
   }
 ]);
