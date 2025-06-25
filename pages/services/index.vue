@@ -109,12 +109,6 @@ const navigateToDetails = (id) => {
                   <i class="pi pi-tag"></i>
                   <span>Non catégorisé</span>
                 </div>
-                <div class="mt-1 flex items-center">
-                  <Badge :value="service.status || 'pending'"
-                    :severity="service.status === 'active' ? 'success' :
-                              service.status === 'pending' ? 'warning' :
-                              service.status === 'completed' ? 'info' : 'danger'" />
-                </div>
               </template>
               <template #content>
                 <p class="text-sm line-clamp-3">{{ service.description || 'Pas de description' }}</p>

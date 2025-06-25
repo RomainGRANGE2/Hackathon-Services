@@ -109,7 +109,7 @@ const deleteService = async () => {
         detail: 'Le service a été supprimé avec succès',
         life: 3000
       })
-      setTimeout(() => router.push('/services/list'), 1500)
+      setTimeout(() => router.push(isOwner.value ? '/services/myoffers' : '/services/list'), 1500)
     } else {
       toast.add({
         severity: 'error',
@@ -143,12 +143,6 @@ const navigateBack = () => {
   <div class="container mx-auto p-4">
     <Toast />
     <div class="flex items-center mb-6">
-      <Button
-        icon="pi pi-arrow-left"
-        class="p-button-text mr-3"
-        @click="navigateBack"
-        aria-label="Retour"
-      />
       <h1 class="text-2xl font-bold">Détails du service</h1>
     </div>
     <div v-if="loading" class="flex justify-center">
@@ -177,9 +171,6 @@ const navigateBack = () => {
         <div class="border-t border-b py-4 my-4">
           <h3 class="text-lg font-semibold mb-2">Description</h3>
           <p class="whitespace-pre-line">{{ service.description }}</p>
-        </div>
-        <div class="text-sm text-gray-500 mb-6">
-          Créé le {{ new Date(service.created_at).toLocaleDateString() }}
         </div>
         <div v-if="isOwner" class="flex flex-wrap gap-3 mt-4">
           <Button
@@ -234,4 +225,3 @@ const navigateBack = () => {
     </Dialog>
   </div>
 </template>
-

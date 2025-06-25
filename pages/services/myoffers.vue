@@ -1,6 +1,14 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useToast } from 'primevue/usetoast'
+import {
+  MagnifyingGlassIcon,
+  PencilIcon,
+  TrashIcon,
+  PlusIcon,
+  TagIcon,
+  CubeIcon
+} from '@heroicons/vue/24/outline'
 
 definePageMeta({
   middleware: ["auth"],
@@ -66,14 +74,17 @@ const navigateToDetails = (id) => {
       </div>
       <div v-else>
         <div class="flex justify-end mb-4">
-          <Button label="Nouveau service" icon="pi pi-plus" @click="navigateTo('/services/new')" />
+          <Button label="Nouveau service" class="flex items-center gap-2" @click="navigateTo('/services/new')">
+            <PlusIcon class="h-5 w-5" />
+            <span>Nouveau service</span>
+          </Button>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           <div v-for="service in services" :key="service.id" class="p-2">
             <Card class="h-full shadow-md rounded-xl overflow-hidden">
               <template #header>
                 <div class="h-40 bg-gray-200 flex items-center justify-center">
-                  <i class="pi pi-box text-4xl" v-if="!service.image"></i>
+                  <CubeIcon class="h-10 w-10 text-gray-400" v-if="!service.image" />
                   <img v-else :src="service.image" :alt="service.title" class="h-full w-full object-cover" />
                 </div>
               </template>
@@ -82,18 +93,12 @@ const navigateToDetails = (id) => {
               </template>
               <template #subtitle>
                 <div class="flex items-center gap-2 mb-2" v-if="service.tag && service.tag.length > 0">
-                  <i class="pi pi-tag"></i>
+                  <TagIcon class="h-5 w-5" />
                   <span>{{ Array.isArray(service.tag) ? service.tag.join(', ') : service.tag }}</span>
                 </div>
                 <div class="flex items-center gap-2 mb-2" v-else>
-                  <i class="pi pi-tag"></i>
+                  <TagIcon class="h-5 w-5" />
                   <span>Non catégorisé</span>
-                </div>
-                <div class="mt-1 flex items-center">
-                  <Badge :value="service.status || 'pending'"
-                    :severity="service.status === 'active' ? 'success' :
-                              service.status === 'pending' ? 'warning' :
-                              service.status === 'completed' ? 'info' : 'danger'" />
                 </div>
               </template>
               <template #content>
@@ -103,8 +108,19 @@ const navigateToDetails = (id) => {
                 </div>
               </template>
               <template #footer>
-                <div class="flex justify-center">
-                  <Button label="Voir détails" icon="pi pi-search" class="w-full" @click="navigateToDetails(service.id)" />
+                <div class="flex flex-col gap-2 w-full">
+                  <div class="flex gap-2 ">
+                    <Button class="p-button-warning flex items-center justify-center" @click="navigateTo(`/services/edit/${service.id}`)">
+                      <PencilIcon class="h-5 w-5" />
+                    </Button>
+                    <Button class="p-button-danger flex items-center justify-center" @click="navigateTo(`/services/list/${service.id}`)">
+                      <TrashIcon class="h-5 w-5" />
+                    </Button>
+                  </div>
+                  <Button class="w-full flex items-center justify-center gap-2" @click="navigateToDetails(service.id)">
+                    <MagnifyingGlassIcon class="h-5 w-5" />
+                    <span>Voir détails</span>
+                  </Button>
                 </div>
               </template>
             </Card>
