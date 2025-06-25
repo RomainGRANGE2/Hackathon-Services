@@ -48,7 +48,7 @@ onMounted(async () => {
 })
 
 const navigateToDetails = (id) => {
-  navigateTo(`/services/list/${id}`)
+  navigateTo(`/services/${id}`)
 }
 </script>
 
@@ -62,7 +62,7 @@ const navigateToDetails = (id) => {
     <div v-else>
       <div v-if="services.length === 0" class="text-center py-8">
         <p class="text-gray-500">Vous n'avez pas encore de services</p>
-        <Button label="Créer un service" icon="pi pi-plus" class="mt-4" @click="navigateTo('/services/new')" />
+        <Button label="Créer un service" class="mt-4" @click="navigateTo('/services/new')" />
       </div>
       <div v-else>
         <div class="flex justify-end mb-4">

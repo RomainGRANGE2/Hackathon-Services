@@ -11,19 +11,16 @@ definePageMeta({
 const router = useRouter()
 const toast = useToast()
 
-// État du formulaire
 const service = ref({
   title: '',
   description: '',
   price: null,
-  tag: [], // tableau de strings
+  tag: [],
   status: 'pending'
 })
 
-// État de chargement
 const loading = ref(false)
 
-// Catégories disponibles
 const availableTags = ref([
   { tags: 'Cuisine' },
   { tags: 'Jardinage' },
@@ -35,9 +32,7 @@ const availableTags = ref([
   { tags: 'Autres' }
 ])
 
-// Soumettre le formulaire
 const submitService = async () => {
-  // Validation des champs
   if (!service.value.title || !service.value.description || service.value.price === null) {
     toast.add({
       severity: 'error',
@@ -50,16 +45,9 @@ const submitService = async () => {
 
   try {
     loading.value = true
-    // Adapter le format des tags pour l'API (tableau de string)
-    const payload = {
-      ...service.value,
-      tag: Array.isArray(service.value.tag)
-        ? service.value.tag.map(t => t.tags)
-        : []
-    }
     const response = await $fetch('/api/services/create', {
       method: 'POST',
-      body: payload
+      body: service.value
     })
 
     if (response.success) {
@@ -69,8 +57,7 @@ const submitService = async () => {
         detail: 'Votre service a été créé avec succès',
         life: 3000
       })
-      // Rediriger vers la page des services
-      router.push('/services/list')
+      navigateTo('/services/list')
     } else {
       toast.add({
         severity: 'error',
@@ -92,9 +79,8 @@ const submitService = async () => {
   }
 }
 
-// Annuler et revenir à la liste des services
 const cancelCreation = () => {
-  router.push('/services/list')
+  navigateTo('/services/list')
 }
 </script>
 
@@ -173,7 +159,6 @@ const cancelCreation = () => {
           />
           <Button
             label="Créer le service"
-            icon="pi pi-check"
             type="submit"
             :loading="loading"
           />

@@ -38,15 +38,15 @@ export const service = () => {
     }
 
     const createService = async function(body,userId) {
-        console.log(body)
         try {
             const result = await query(
-                'INSERT INTO "service" (user_id, title,description, price) VALUES ($1, $2, $3, $4)',
+                'INSERT INTO "service" (user_id, title, description, price,tag) VALUES ($1, $2, $3, $4, $5)',
                 [
                    userId,
                     body.title,
                     body.description,
                     body.price,
+                    JSON.stringify(body.tag)
                 ]
             )
             return result.rows
