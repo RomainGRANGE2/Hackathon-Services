@@ -3,10 +3,13 @@ import { service } from '~/server/utils/service'
 export default defineEventHandler(async (event) => {
   const serviceUtils = service()
   const { id } = event.context.params
-  const user = event.context?.auth?.user
+  const session = await getUserSession(event)
+
+  const userIdSession = session?.user?.id
 
   try {
     const foundService = await serviceUtils.getServiceById(id)
+    const userId = foundService.user_id
     if (!foundService) {
       return {
         success: false,
@@ -14,7 +17,7 @@ export default defineEventHandler(async (event) => {
       }
     }
     let isOwner = false
-    if (user && user.id && foundService.user_id == user.id) {
+    if (userId && userId === userIdSession) {
       isOwner = true
     }
     return {

@@ -2,8 +2,10 @@ import { service } from '~/server/utils/service'
 
 export default defineEventHandler(async (event) => {
   try {
-    const session = await useSession(event)
-    const userId = session?.data?.userId
+    const session = await getUserSession(event)
+
+    const userId = session?.user?.id
+
     if (!userId) {
       return { success: false, error: 'Non autorisé' }
     }

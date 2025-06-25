@@ -42,7 +42,6 @@ if (response.success) {
       detail: "Vous n'êtes pas autorisé à modifier ce service",
       life: 3000,
     });
-    setTimeout(() => router.push('/services/list'), 2000);
   } else {
     const service = response.service;
 
@@ -71,7 +70,6 @@ if (response.success) {
     detail: 'Impossible de récupérer les détails du service',
     life: 3000,
   });
-  setTimeout(() => router.push('/services/list'), 2000);
 }
 loading.value = false;
 
@@ -107,13 +105,7 @@ const updateService = async () => {
     });
 
     if (response.success) {
-      toast.add({
-        severity: 'success',
-        summary: 'Succès',
-        detail: 'Le service a été mis à jour avec succès',
-        life: 3000,
-      });
-      setTimeout(() => router.push('/services/myoffers'), 1500);
+      navigateTo('/services/myoffers')
     } else {
       toast.add({
         severity: 'error',

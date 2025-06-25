@@ -2,11 +2,9 @@ import { service } from '~/server/utils/service';
 
 export default defineEventHandler(async (event) => {
   try {
-    const session = await useSession(event);
-    console.log('Session complète:', session);
-    console.log('Session data:', session?.data);
+    const session = await getUserSession(event)
     
-    const userId = session?.data?.userId;
+    const userId = session?.user?.id
     console.log('UserID extrait de la session:', userId);
 
     if (!userId) {

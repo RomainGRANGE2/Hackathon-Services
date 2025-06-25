@@ -41,7 +41,6 @@ if (response.success) {
     detail: 'Impossible de récupérer les détails du service',
     life: 3000,
   });
-  setTimeout(() => router.push('/services/list'), 2000);
 }
 loading.value = false;
 
@@ -96,17 +95,7 @@ const deleteService = async () => {
       },
     });
     if (response.success) {
-      toast.add({
-        severity: 'success',
-        summary: 'Succès',
-        detail: 'Le service a été supprimé avec succès',
-        life: 3000,
-      });
-      setTimeout(
-        () =>
-          router.push(isOwner.value ? '/services/myoffers' : '/services/list'),
-        1500
-      );
+      navigateTo('/services/myoffers')
     } else {
       toast.add({
         severity: 'error',
@@ -165,18 +154,6 @@ const navigateBack = () => {
       <div class="p-6">
         <div class="flex justify-between items-start mb-4">
           <h2 class="text-2xl font-bold">{{ service.title }}</h2>
-          <Badge
-            :value="service.status"
-            :severity="
-              service.status === 'active'
-                ? 'success'
-                : service.status === 'pending'
-                ? 'warning'
-                : service.status === 'completed'
-                ? 'info'
-                : 'danger'
-            "
-          />
         </div>
         <div
           class="flex flex-wrap gap-2 mb-4"
@@ -194,29 +171,6 @@ const navigateBack = () => {
             label="Modifier"
             icon="pi pi-pencil"
             @click="navigateToEdit"
-          />
-          <Button
-            :label="service.status === 'active' ? 'Désactiver' : 'Activer'"
-            :icon="service.status === 'active' ? 'pi pi-times' : 'pi pi-check'"
-            :class="
-              service.status === 'active'
-                ? 'p-button-warning'
-                : 'p-button-success'
-            "
-            @click="
-              updateServiceStatus(
-                service.status === 'active' ? 'pending' : 'active'
-              )
-            "
-            :loading="updating"
-          />
-          <Button
-            label="Marquer comme terminé"
-            icon="pi pi-check-circle"
-            class="p-button-info"
-            @click="updateServiceStatus('completed')"
-            :loading="updating"
-            v-if="service.status !== 'completed'"
           />
           <Button
             label="Supprimer"

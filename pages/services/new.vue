@@ -57,7 +57,7 @@ const submitService = async () => {
         detail: 'Votre service a été créé avec succès',
         life: 3000
       })
-      navigateTo('/services/list')
+      navigateTo('/services/myoffers')
     } else {
       toast.add({
         severity: 'error',
