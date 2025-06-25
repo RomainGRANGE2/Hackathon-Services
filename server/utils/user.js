@@ -35,6 +35,23 @@ export const user = () => {
         }
     }
 
+    const getUserByEmail = async function(email){
+        try {
+            const result = await query(
+                'SELECT * FROM "user" WHERE email = $1',
+                [email]
+            )
+            return result.rows[0]
+        } catch (error){
+            throw error
+        }
+    }
+
+    const checkPassword = async function(password, hash){
+        const bcrypt = await import('bcrypt')
+        return await bcrypt.compare(password, hash)
+    }
+
     const checkUuid = async function(uuid){
         try {
             const result = await query(
@@ -74,6 +91,8 @@ export const user = () => {
     return {
         createUser,
         getUserByEmailAndVerify,
+        getUserByEmail,
+        checkPassword,
         checkUuid,
         verifyAccount,
         resetUuid
