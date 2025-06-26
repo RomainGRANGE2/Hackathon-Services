@@ -46,6 +46,12 @@
         </template>
         <template #end>
           <div class="flex items-center gap-4">
+            <a
+              v-if="session?.user"
+              href="/contact"
+              class="cursor-pointer p-2 rounded-lg px-4 hover:bg-gray-100 transition-colors"
+              >Contact</a
+            >
             <Button
               v-if="!session?.user"
               class="cursor-pointer p-2 rounded-lg px-4"
