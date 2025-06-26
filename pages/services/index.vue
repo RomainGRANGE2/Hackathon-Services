@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useToast } from 'primevue/usetoast';
+import {TagIcon} from "@heroicons/vue/24/outline/index.js";
 
 definePageMeta({
   middleware: ['auth'],
@@ -123,7 +124,7 @@ const navigateToDetails = (id) => {
                   class="flex items-center gap-2 mb-2"
                   v-if="service.tag && service.tag.length > 0"
                 >
-                  <i class="pi pi-tag"></i>
+                  <TagIcon class="h-5 w-5" />
                   <span>{{
                     Array.isArray(service.tag)
                       ? service.tag.join(', ')
@@ -131,7 +132,7 @@ const navigateToDetails = (id) => {
                   }}</span>
                 </div>
                 <div class="flex items-center gap-2 mb-2" v-else>
-                  <i class="pi pi-tag"></i>
+                  <TagIcon class="h-5 w-5" />
                   <span>Non catégorisé</span>
                 </div>
               </template>
