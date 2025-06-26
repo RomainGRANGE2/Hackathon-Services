@@ -1,11 +1,18 @@
-import { service } from '~/server/utils/service';
+import { service } from "~/server/utils/service";
 
 export default defineEventHandler(async (event) => {
   const serviceUtils = service();
 
+  // Récupérer l'utilisateur connecté depuis la session
+  const userSession = await getUserSession(event);
+  const userId = userSession?.user?.id;
+
   try {
-    // Retourner tous les services, le filtrage se fait côté client selon la page
-    const services = await serviceUtils.getAllServices();
+    // Récupérer tous les services sauf ceux de l'utilisateur connecté
+    let services = await serviceUtils.getAllServices();
+    if (userId) {
+      services = services.filter((s) => s.user_id !== userId);
+    }
     return {
       success: true,
       services,

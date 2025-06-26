@@ -1,4 +1,4 @@
-import { query } from '~/server/utils/db.js';
+import { query } from "~/server/utils/db.js";
 
 export const user = () => {
   const createUser = async function (body, hash, uuid) {
@@ -10,7 +10,7 @@ export const user = () => {
           body.firstname,
           body.email,
           hash,
-          body.role ? 'provider' : 'customer',
+          body.role ? "provider" : "customer",
           body.description,
           body.phone,
           body.location,
@@ -47,7 +47,7 @@ export const user = () => {
   };
 
   const checkPassword = async function (password, hash) {
-    const bcrypt = await import('bcrypt');
+    const bcrypt = await import("bcrypt");
     return await bcrypt.compare(password, hash);
   };
 
@@ -86,10 +86,20 @@ export const user = () => {
     }
   };
 
+  const getUserById = async function (id) {
+    try {
+      const result = await query('SELECT * FROM "user" WHERE id = $1', [id]);
+      return result.rows[0];
+    } catch (error) {
+      throw error;
+    }
+  };
+
   return {
     createUser,
     getUserByEmailAndVerify,
     getUserByEmail,
+    getUserById,
     checkPassword,
     checkUuid,
     verifyAccount,

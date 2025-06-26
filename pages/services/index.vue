@@ -1,18 +1,17 @@
 <script setup>
-import { ref, onMounted, watch } from 'vue';
-import { useToast } from 'primevue/usetoast';
-import {TagIcon} from "@heroicons/vue/24/outline/index.js";
+import { ref, onMounted, watch } from "vue";
+import { useToast } from "primevue/usetoast";
+import { TagIcon } from "@heroicons/vue/24/outline/index.js";
 import ProjectAnalysisModal from '~/components/ProjectAnalysisModal.vue';
 
 definePageMeta({
-  middleware: ['auth'],
-  layout: 'navbar',
+  layout: "navbar",
 });
 
 const services = ref([]);
 const loading = ref(true);
 const toast = useToast();
-const searchQuery = ref('');
+const searchQuery = ref("");
 const showAnalysisModal = ref(false);
 const projectAnalysis = ref(null);
 const simpleSearchQuery = ref('');
@@ -22,7 +21,7 @@ onMounted(async () => {
   try {
     // Récupérer le paramètre de recherche depuis l'URL
     const route = useRoute();
-    searchQuery.value = route.query.search || '';
+    searchQuery.value = route.query.search || "";
 
     if (searchQuery.value) {
       // Si on a une recherche, analyser le projet avec l'IA
@@ -246,7 +245,7 @@ watch(simpleSearchQuery, (newValue) => {
         <div
           class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
         >
-          <div v-for="(service,i) in services" :key="service.id" class="p-2">
+          <div v-for="(service, i) in services" :key="service.id" class="p-2">
             <Card class="h-full shadow-md rounded-xl overflow-hidden">
               <template #header>
                 <div class="h-40 bg-gray-200 flex items-center justify-center">
@@ -258,7 +257,7 @@ watch(simpleSearchQuery, (newValue) => {
                 </div>
               </template>
               <template #title>
-                {{ service.title || 'Sans titre' }}
+                {{ service.title || "Sans titre" }}
               </template>
               <template #subtitle>
                 <div
@@ -268,7 +267,7 @@ watch(simpleSearchQuery, (newValue) => {
                   <TagIcon class="h-5 w-5" />
                   <span>{{
                     Array.isArray(service.tag)
-                      ? service.tag.join(', ')
+                      ? service.tag.join(", ")
                       : service.tag
                   }}</span>
                 </div>
@@ -279,11 +278,11 @@ watch(simpleSearchQuery, (newValue) => {
               </template>
               <template #content>
                 <p class="text-sm line-clamp-3">
-                  {{ service.description || 'Pas de description' }}
+                  {{ service.description || "Pas de description" }}
                 </p>
                 <div class="flex justify-between items-center mt-4">
                   <span class="font-bold text-lg"
-                    >{{ service.price || '0' }} €</span
+                    >{{ service.price || "0" }} €</span
                   >
                 </div>
               </template>
