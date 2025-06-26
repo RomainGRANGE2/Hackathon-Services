@@ -92,7 +92,7 @@ export default defineEventHandler(async (event) => {
     await sendTransactionnalTemplate(
       payloadFactory(
         tos.map((user) => emailFactory(user.email)),
-        8, // Template ID pour la réservation
+        8,
         "Nouvelle réservation pour votre service",
         {
           providerName: provider.firstname,
