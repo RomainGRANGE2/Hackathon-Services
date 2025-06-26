@@ -2,7 +2,7 @@
 import { ref, onMounted, watch } from "vue";
 import { useToast } from "primevue/usetoast";
 import { TagIcon } from "@heroicons/vue/24/outline/index.js";
-import ProjectAnalysisModal from '~/components/ProjectAnalysisModal.vue';
+import ProjectAnalysisModal from "~/components/ProjectAnalysisModal.vue";
 
 definePageMeta({
   layout: "navbar",
@@ -16,7 +16,7 @@ const showAnalysisModal = ref(false);
 const projectAnalysis = ref(null);
 const analysisLoading = ref(false);
 const analysisError = ref(null);
-const simpleSearchQuery = ref('');
+const simpleSearchQuery = ref("");
 const isSimpleSearching = ref(false);
 
 onMounted(async () => {
@@ -26,7 +26,7 @@ onMounted(async () => {
     searchQuery.value = route.query.search || "";
 
     if (searchQuery.value) {
-      // Si on a une recherche, ouvrir immédiatement la modal et analyser le projet
+      // Si on a une recherche, ouvrir immédiatement la modal et analyser le projettt
       showAnalysisModal.value = true;
       await analyzeProject();
       // Charger aussi les services normaux en arrière-plan
@@ -37,8 +37,8 @@ onMounted(async () => {
     }
   } catch (error) {
     toast.add({
-      severity: 'error',
-      summary: 'Erreur',
+      severity: "error",
+      summary: "Erreur",
       detail: "Une erreur s'est produite lors de la récupération des services",
       life: 3000,
     });
@@ -49,10 +49,10 @@ onMounted(async () => {
 });
 
 const loadServices = async () => {
-  const response = await $fetch('/api/services/list');
+  const response = await $fetch("/api/services/list");
   if (response.success) {
     services.value = response.services.map((service) => {
-      if (service.tag && typeof service.tag === 'string') {
+      if (service.tag && typeof service.tag === "string") {
         try {
           service.tag = JSON.parse(service.tag);
         } catch (e) {
@@ -65,9 +65,9 @@ const loadServices = async () => {
     });
   } else {
     toast.add({
-      severity: 'error',
-      summary: 'Erreur',
-      detail: 'Impossible de récupérer la liste des services',
+      severity: "error",
+      summary: "Erreur",
+      detail: "Impossible de récupérer la liste des services",
       life: 3000,
     });
   }
@@ -76,34 +76,38 @@ const loadServices = async () => {
 const analyzeProject = async () => {
   analysisLoading.value = true;
   analysisError.value = null;
-  
+
   try {
-    const response = await $fetch('/api/services/search', {
-      method: 'POST',
-      body: { query: searchQuery.value }
+    const response = await $fetch("/api/services/search", {
+      method: "POST",
+      body: { query: searchQuery.value },
     });
 
     if (response.success) {
       projectAnalysis.value = response.projectAnalysis;
     } else {
-      analysisError.value = 'Impossible d\'analyser votre projet. Veuillez réessayer.';
+      analysisError.value =
+        "Impossible d'analyser votre projet. Veuillez réessayer.";
     }
   } catch (error) {
-    console.error('Erreur analyse projet:', error);
-    analysisError.value = 'Une erreur est survenue lors de l\'analyse. Vérifiez votre connexion et réessayez.';
+    console.error("Erreur analyse projet:", error);
+    analysisError.value =
+      "Une erreur est survenue lors de l'analyse. Vérifiez votre connexion et réessayez.";
   } finally {
     analysisLoading.value = false;
   }
 };
 
 // Fonction de recherche simple par mots-clés
-const performSimpleSearch = async (searchTerm = '') => {
+const performSimpleSearch = async (searchTerm = "") => {
   isSimpleSearching.value = true;
   try {
-    const response = await $fetch(`/api/services/simple-search?q=${encodeURIComponent(searchTerm)}`);
+    const response = await $fetch(
+      `/api/services/simple-search?q=${encodeURIComponent(searchTerm)}`
+    );
     if (response.success) {
       services.value = response.services.map((service) => {
-        if (service.tag && typeof service.tag === 'string') {
+        if (service.tag && typeof service.tag === "string") {
           try {
             service.tag = JSON.parse(service.tag);
           } catch (e) {
@@ -116,18 +120,18 @@ const performSimpleSearch = async (searchTerm = '') => {
       });
     } else {
       toast.add({
-        severity: 'error',
-        summary: 'Erreur',
-        detail: 'Impossible de rechercher les services',
+        severity: "error",
+        summary: "Erreur",
+        detail: "Impossible de rechercher les services",
         life: 3000,
       });
     }
   } catch (error) {
-    console.error('Erreur recherche simple:', error);
+    console.error("Erreur recherche simple:", error);
     toast.add({
-      severity: 'error',
-      summary: 'Erreur',
-      detail: 'Erreur lors de la recherche',
+      severity: "error",
+      summary: "Erreur",
+      detail: "Erreur lors de la recherche",
       life: 3000,
     });
   } finally {
@@ -142,7 +146,7 @@ const handleSimpleSearch = () => {
 
 // Fonction pour effacer la recherche
 const clearSimpleSearch = () => {
-  simpleSearchQuery.value = '';
+  simpleSearchQuery.value = "";
   loadServices();
 };
 
@@ -151,7 +155,7 @@ const closeAnalysisModal = () => {
   projectAnalysis.value = null;
   analysisError.value = null;
   // Retourner à la liste normale des services
-  navigateTo('/services');
+  navigateTo("/services");
 };
 
 const modifySearch = () => {
@@ -159,7 +163,7 @@ const modifySearch = () => {
   projectAnalysis.value = null;
   analysisError.value = null;
   // Retourner à la page d'accueil pour une nouvelle recherche
-  navigateTo('/');
+  navigateTo("/");
 };
 
 const retryAnalysis = () => {
@@ -184,7 +188,7 @@ watch(simpleSearchQuery, (newValue) => {
 <template>
   <div class="container mx-auto p-4">
     <Toast />
-    
+
     <!-- Modal d'analyse de projet -->
     <ProjectAnalysisModal
       :visible="showAnalysisModal"
@@ -195,7 +199,7 @@ watch(simpleSearchQuery, (newValue) => {
       @modify-search="modifySearch"
       @retry="retryAnalysis"
     />
-    
+
     <div class="flex justify-between items-center mb-6">
       <div>
         <h1 class="text-2xl font-bold">Services</h1>
@@ -216,7 +220,9 @@ watch(simpleSearchQuery, (newValue) => {
     <div class="mb-6">
       <div class="max-w-md">
         <div class="flex items-center mb-2">
-          <h3 class="text-sm font-medium text-gray-700">Recherche intelligente</h3>
+          <h3 class="text-sm font-medium text-gray-700">
+            Recherche intelligente
+          </h3>
         </div>
         <div class="relative">
           <input
@@ -225,7 +231,9 @@ watch(simpleSearchQuery, (newValue) => {
             placeholder="Recherchez"
             class="w-full px-4 py-2 pr-20 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
-          <div class="absolute right-2 top-1/2 transform -translate-y-1/2 flex items-center space-x-1">
+          <div
+            class="absolute right-2 top-1/2 transform -translate-y-1/2 flex items-center space-x-1"
+          >
             <Button
               v-if="simpleSearchQuery"
               icon="pi pi-times"
@@ -245,7 +253,9 @@ watch(simpleSearchQuery, (newValue) => {
           </div>
         </div>
         <p v-if="simpleSearchQuery" class="text-sm text-gray-500 mt-1">
-          {{ services.length }} service(s) trouvé(s) par l'IA pour "{{ simpleSearchQuery }}"
+          {{ services.length }} service(s) trouvé(s) par l'IA pour "{{
+            simpleSearchQuery
+          }}"
         </p>
       </div>
     </div>
@@ -271,9 +281,9 @@ watch(simpleSearchQuery, (newValue) => {
               <template #header>
                 <div class="h-40 bg-gray-200 flex items-center justify-center">
                   <img
-                      :src="`https://picsum.photos/500/500?random=${service.id}`"
-                      :alt="service.title"
-                      class="h-full w-full object-cover"
+                    :src="`https://picsum.photos/500/500?random=${service.id}`"
+                    :alt="service.title"
+                    class="h-full w-full object-cover"
                   />
                 </div>
               </template>
