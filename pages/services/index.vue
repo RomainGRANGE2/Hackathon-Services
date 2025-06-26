@@ -26,7 +26,7 @@ onMounted(async () => {
     searchQuery.value = route.query.search || "";
 
     if (searchQuery.value) {
-      // Si on a une recherche, ouvrir immédiatement la modal et analyser le projettteee
+      // Si on a une recherche, ouvrir immédiatement la modal et analyser le projettteeeeeee
       showAnalysisModal.value = true;
       await analyzeProject();
       // Charger aussi les services normaux en arrière-plan
