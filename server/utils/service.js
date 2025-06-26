@@ -32,6 +32,18 @@ export const service = () => {
     }
   };
 
+  // Fonction pour récupérer tous les services SAUF ceux de l'utilisateur connecté
+  const getServicesExcludingUser = async function (userId) {
+    try {
+      const result = await query('SELECT * FROM "service" WHERE user_id != $1', [
+        userId,
+      ]);
+      return result.rows;
+    } catch (error) {
+      throw error;
+    }
+  };
+
   const createService = async function (body, userId) {
     try {
       const result = await query(
@@ -161,6 +173,7 @@ export const service = () => {
     getAllServices,
     getServiceById,
     getServicesByUserId,
+    getServicesExcludingUser,
     createService,
     updateService,
     deleteService,

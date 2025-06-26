@@ -5,9 +5,15 @@ export default defineEventHandler(async (event) => {
     const query = getQuery(event)
     const searchTerm = query.q || ''
 
-    // Récupérer tous les services
+    // Récupérer l'utilisateur connecté
+    const userSession = await getUserSession(event)
+    const userId = userSession?.user?.id
+
+    // Récupérer les services (tous si pas connecté, sinon exclure les siens)
     const serviceUtils = service()
-    const allServices = await serviceUtils.getAllServices()
+    const allServices = userId 
+      ? await serviceUtils.getServicesExcludingUser(userId)
+      : await serviceUtils.getAllServices()
     
     if (!allServices || allServices.length === 0) {
       return {
@@ -16,7 +22,7 @@ export default defineEventHandler(async (event) => {
       }
     }
 
-    // Si pas de terme de recherche, retourner tous les services
+    // Si pas de terme de recherche, retourner tous les services (sauf les siens)
     if (!searchTerm.trim()) {
       return {
         success: true,

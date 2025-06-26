@@ -12,14 +12,29 @@ export default defineEventHandler(async (event) => {
       }
     }
 
-    // Récupérer tous les services
+    // Récupérer l'utilisateur connecté
+    const userSession = await getUserSession(event)
+    const userId = userSession?.user?.id
+
+    if (!userId) {
+      throw createError({
+        statusCode: 401,
+        statusMessage: "Non autorisé",
+      })
+    }
+
+    // Récupérer tous les services SAUF ceux de l'utilisateur connecté
     const serviceUtils = service()
-    const allServices = await serviceUtils.getAllServices()
+    const allServices = await serviceUtils.getServicesExcludingUser(userId)
     
     if (!allServices || allServices.length === 0) {
       return {
         success: true,
-        services: []
+        projectAnalysis: {
+          projectTitle: "Aucun service disponible",
+          projectSummary: "Malheureusement, aucun service externe n'est actuellement disponible pour votre projet.",
+          tasks: []
+        }
       }
     }
 

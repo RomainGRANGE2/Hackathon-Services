@@ -9,10 +9,10 @@ export default defineEventHandler(async (event) => {
 
   try {
     // Récupérer tous les services sauf ceux de l'utilisateur connecté
-    let services = await serviceUtils.getAllServices();
-    if (userId) {
-      services = services.filter((s) => s.user_id !== userId);
-    }
+    const services = userId 
+      ? await serviceUtils.getServicesExcludingUser(userId)
+      : await serviceUtils.getAllServices();
+      
     return {
       success: true,
       services,
