@@ -2,6 +2,7 @@
 import { ref } from "vue";
 import { useToast } from "primevue/usetoast";
 import { useRoute, useRouter } from "vue-router";
+import { CubeIcon, ExclamationTriangleIcon } from "@heroicons/vue/24/outline";
 
 definePageMeta({
   layout: "navbar",
@@ -189,7 +190,7 @@ const bookService = async () => {
       <div
         class="h-64 bg-gray-200 flex items-center justify-center rounded-t-lg overflow-hidden"
       >
-        <i class="pi pi-box text-6xl text-gray-400" v-if="!service.image"></i>
+        <CubeIcon class="h-24 w-24 text-gray-400" v-if="!service.image" />
         <img
           v-else
           :src="service.image"
@@ -258,7 +259,6 @@ const bookService = async () => {
       :style="{ width: '450px' }"
     >
       <div class="flex flex-column align-items-center">
-        <i class="pi pi-exclamation-triangle text-5xl text-yellow-500 mb-3"></i>
         <p>
           Êtes-vous sûr de vouloir supprimer ce service ? Cette action est
           irréversible.
