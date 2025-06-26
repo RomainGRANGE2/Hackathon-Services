@@ -250,9 +250,9 @@ watch(simpleSearchQuery, (newValue) => {
               <template #header>
                 <div class="h-40 bg-gray-200 flex items-center justify-center">
                   <img
-                    :src="`https://picsum.photos/500/50${i}`"
-                    :alt="service.title"
-                    class="h-full w-full object-cover"
+                      :src="`https://picsum.photos/500/500?random=${service.id}`"
+                      :alt="service.title"
+                      class="h-full w-full object-cover"
                   />
                 </div>
               </template>

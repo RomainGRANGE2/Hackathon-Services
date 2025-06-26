@@ -186,16 +186,14 @@ const bookService = async () => {
     <div v-else-if="!service" class="text-center py-8">
       <p class="text-gray-500">Ce service n'existe pas ou a été supprimé.</p>
     </div>
-    <div v-else class="bg-white rounded-lg shadow-md max-w-4xl mx-auto">
+    <div class="bg-white rounded-lg shadow-md max-w-4xl mx-auto" v-else>
       <div
         class="h-64 bg-gray-200 flex items-center justify-center rounded-t-lg overflow-hidden"
       >
-        <CubeIcon class="h-24 w-24 text-gray-400" v-if="!service.image" />
         <img
-          v-else
-          :src="service.image"
-          :alt="service.title"
-          class="h-full w-full object-cover"
+            :src="`https://picsum.photos/1000/1000?random=${service.id}`"
+            :alt="service.title"
+            class="h-full w-full object-cover"
         />
       </div>
       <div class="p-6">
