@@ -1,7 +1,8 @@
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import { useToast } from 'primevue/usetoast';
 import {TagIcon} from "@heroicons/vue/24/outline/index.js";
+import ProjectAnalysisModal from '~/components/ProjectAnalysisModal.vue';
 
 definePageMeta({
   middleware: ['auth'],
@@ -12,6 +13,10 @@ const services = ref([]);
 const loading = ref(true);
 const toast = useToast();
 const searchQuery = ref('');
+const showAnalysisModal = ref(false);
+const projectAnalysis = ref(null);
+const simpleSearchQuery = ref('');
+const isSimpleSearching = ref(false);
 
 onMounted(async () => {
   try {
@@ -19,18 +24,75 @@ onMounted(async () => {
     const route = useRoute();
     searchQuery.value = route.query.search || '';
 
-    // Si on a une recherche, utiliser l'endpoint de recherche IA, sinon la liste normale
-    const endpoint = searchQuery.value
-      ? '/api/services/search'
-      : '/api/services/list';
-    const payload = searchQuery.value
-      ? { query: searchQuery.value }
-      : undefined;
+    if (searchQuery.value) {
+      // Si on a une recherche, analyser le projet avec l'IA
+      await analyzeProject();
+    } else {
+      // Sinon, charger la liste normale des services
+      await loadServices();
+    }
+  } catch (error) {
+    toast.add({
+      severity: 'error',
+      summary: 'Erreur',
+      detail: "Une erreur s'est produite lors de la récupération des services",
+      life: 3000,
+    });
+    console.error(error);
+  } finally {
+    loading.value = false;
+  }
+});
 
-    const response = payload
-      ? await $fetch(endpoint, { method: 'POST', body: payload })
-      : await $fetch(endpoint);
+const loadServices = async () => {
+  const response = await $fetch('/api/services/list');
+  if (response.success) {
+    services.value = response.services.map((service) => {
+      if (service.tag && typeof service.tag === 'string') {
+        try {
+          service.tag = JSON.parse(service.tag);
+        } catch (e) {
+          service.tag = [];
+        }
+      } else if (!service.tag) {
+        service.tag = [];
+      }
+      return service;
+    });
+  } else {
+    toast.add({
+      severity: 'error',
+      summary: 'Erreur',
+      detail: 'Impossible de récupérer la liste des services',
+      life: 3000,
+    });
+  }
+};
 
+const analyzeProject = async () => {
+  const response = await $fetch('/api/services/search', {
+    method: 'POST',
+    body: { query: searchQuery.value }
+  });
+
+  if (response.success) {
+    projectAnalysis.value = response.projectAnalysis;
+    showAnalysisModal.value = true;
+  } else {
+    toast.add({
+      severity: 'error',
+      summary: 'Erreur',
+      detail: 'Impossible d\'analyser votre projet',
+      life: 3000,
+    });
+  }
+};
+
+// Fonction de recherche simple par mots-clés
+const performSimpleSearch = async (searchTerm = '') => {
+  isSimpleSearching.value = true;
+  try {
+    const response = await $fetch(`/api/services/simple-search?q=${encodeURIComponent(searchTerm)}`);
     if (response.success) {
       services.value = response.services.map((service) => {
         if (service.tag && typeof service.tag === 'string') {
@@ -48,43 +110,122 @@ onMounted(async () => {
       toast.add({
         severity: 'error',
         summary: 'Erreur',
-        detail: 'Impossible de récupérer la liste des services',
+        detail: 'Impossible de rechercher les services',
         life: 3000,
       });
     }
   } catch (error) {
+    console.error('Erreur recherche simple:', error);
     toast.add({
       severity: 'error',
       summary: 'Erreur',
-      detail: "Une erreur s'est produite lors de la récupération des services",
+      detail: 'Erreur lors de la recherche',
       life: 3000,
     });
-    console.error(error);
   } finally {
-    loading.value = false;
+    isSimpleSearching.value = false;
   }
-});
+};
+
+// Fonction appelée quand l'utilisateur tape dans la barre de recherche
+const handleSimpleSearch = () => {
+  performSimpleSearch(simpleSearchQuery.value);
+};
+
+// Fonction pour effacer la recherche
+const clearSimpleSearch = () => {
+  simpleSearchQuery.value = '';
+  loadServices();
+};
+
+const closeAnalysisModal = () => {
+  showAnalysisModal.value = false;
+  // Retourner à la liste normale des services
+  navigateTo('/services');
+};
+
+const modifySearch = () => {
+  showAnalysisModal.value = false;
+  // Retourner à la page d'accueil pour une nouvelle recherche
+  navigateTo('/');
+};
 
 const navigateToDetails = (id) => {
   navigateTo(`/services/${id}`);
 };
+
+// Watcher pour recherche en temps réel avec debounce
+let searchTimeout;
+watch(simpleSearchQuery, (newValue) => {
+  clearTimeout(searchTimeout);
+  searchTimeout = setTimeout(() => {
+    performSimpleSearch(newValue);
+  }, 300); // Attendre 300ms après que l'utilisateur arrête de taper
+});
 </script>
 
 <template>
   <div class="container mx-auto p-4">
     <Toast />
+    
+    <!-- Modal d'analyse de projet -->
+    <ProjectAnalysisModal
+      :visible="showAnalysisModal"
+      :analysis="projectAnalysis"
+      @close="closeAnalysisModal"
+      @modify-search="modifySearch"
+    />
+    
     <div class="flex justify-between items-center mb-6">
       <div>
         <h1 class="text-2xl font-bold">Services</h1>
-        <p v-if="searchQuery" class="text-gray-600 mt-1">
-          Résultats pour : "{{ searchQuery }}"
+        <p v-if="searchQuery && !showAnalysisModal" class="text-gray-600 mt-1">
+          Analyse terminée pour : "{{ searchQuery }}"
           <Button
-            label="Voir tous les services"
+            label="Voir l'analyse"
             text
             size="small"
             class="ml-2"
-            @click="navigateTo('/services')"
+            @click="showAnalysisModal = true"
           />
+        </p>
+      </div>
+    </div>
+
+    <!-- Barre de recherche simple -->
+    <div class="mb-6">
+      <div class="max-w-md">
+        <div class="flex items-center mb-2">
+          <h3 class="text-sm font-medium text-gray-700">Recherche intelligente</h3>
+        </div>
+        <div class="relative">
+          <input
+            v-model="simpleSearchQuery"
+            type="text"
+            placeholder="Recherchez"
+            class="w-full px-4 py-2 pr-20 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          />
+          <div class="absolute right-2 top-1/2 transform -translate-y-1/2 flex items-center space-x-1">
+            <Button
+              v-if="simpleSearchQuery"
+              icon="pi pi-times"
+              text
+              size="small"
+              class="p-1"
+              @click="clearSimpleSearch"
+            />
+            <Button
+              icon="pi pi-search"
+              text
+              size="small"
+              class="p-1"
+              :loading="isSimpleSearching"
+              disabled
+            />
+          </div>
+        </div>
+        <p v-if="simpleSearchQuery" class="text-sm text-gray-500 mt-1">
+          {{ services.length }} service(s) trouvé(s) par l'IA pour "{{ simpleSearchQuery }}"
         </p>
       </div>
     </div>

@@ -33,17 +33,12 @@ export default defineEventHandler(async (event) => {
       price: service.price || 0
     }))
 
-    // Appeler l'IA pour filtrer les services
-    const relevantServices = await filterServicesWithAI(query, servicesForAI)
+    // Appeler l'IA pour décomposer le projet et trouver les services
+    const projectAnalysis = await analyzeProjectWithAI(query, servicesForAI)
     
-    // Récupérer les services complets correspondants
-    const filteredServices = allServices.filter(service => 
-      relevantServices.some(relevant => relevant.id === service.id)
-    )
-
     return {
       success: true,
-      services: filteredServices,
+      projectAnalysis,
       searchQuery: query
     }
 
@@ -56,14 +51,17 @@ export default defineEventHandler(async (event) => {
   }
 })
 
-// Fonction pour filtrer les services avec l'IA
-async function filterServicesWithAI(query, services) {
+// Fonction pour analyser le projet et trouver les services correspondants
+async function analyzeProjectWithAI(projectPitch, services) {
   try {
     const prompt = `
-Tu es un assistant qui aide à filtrer des services digitaux selon une recherche utilisateur.
-Analyse la requête et retourne uniquement les services qui correspondent le mieux à cette recherche.
+Tu es un expert en gestion de projet digital. L'utilisateur te décrit son projet et tu dois :
 
-Requête de recherche: "${query}"
+1. Décomposer son projet en grandes étapes/tâches nécessaires
+2. Pour chaque étape, trouver le service le plus pertinent dans notre base de données
+3. Si aucun service ne correspond à une étape, indiquer qu'aucun service n'est disponible
+
+Pitch du projet: "${projectPitch}"
 
 Services disponibles:
 ${services.map(service => `
@@ -75,8 +73,31 @@ Catégorie: ${service.category}
 Prix: ${service.price}€
 ---`).join('\n')}
 
-Retourne UNIQUEMENT un objet JSON avec une propriété "services" contenant un tableau des IDs pertinents.
-Format exact attendu: {"services": [{"id": 1}, {"id": 3}, {"id": 5}]}
+Retourne UNIQUEMENT un objet JSON avec cette structure exacte :
+{
+  "projectTitle": "Titre généré pour le projet",
+  "projectSummary": "Résumé du projet en 1-2 phrases",
+  "tasks": [
+    {
+      "title": "Nom de la tâche/étape",
+      "description": "Description de ce qui est nécessaire pour cette étape",
+      "recommendedService": {
+        "id": 123,
+        "title": "Titre du service",
+        "description": "Description du service",
+        "price": 500,
+        "matchReason": "Pourquoi ce service correspond à cette tâche"
+      }
+    },
+    {
+      "title": "Autre tâche",
+      "description": "Description de cette étape",
+      "recommendedService": null
+    }
+  ]
+}
+
+Si aucun service ne correspond à une tâche, mets "recommendedService": null
 `
 
     // Utilisation de Mistral AI
@@ -87,37 +108,74 @@ Format exact attendu: {"services": [{"id": 1}, {"id": 3}, {"id": 5}]}
         'Content-Type': 'application/json',
       },
       body: {
-        model: 'mistral-small-latest', // ou 'mistral-tiny' pour plus rapide et moins cher
+        model: 'mistral-small-latest',
         messages: [
           {
             role: 'user',
             content: prompt
           }
         ],
-        temperature: 0.1,
-        max_tokens: 500,
+        temperature: 0.2,
+        max_tokens: 1500,
         response_format: { type: 'json_object' }
       }
     })
 
     const aiResponse = response.choices[0].message.content.trim()
     
-    // Parser la réponse JSON de l'IA
     try {
-      const responseData = JSON.parse(aiResponse)
-      const relevantServices = responseData.services || responseData
-      return Array.isArray(relevantServices) ? relevantServices : []
+      const projectAnalysis = JSON.parse(aiResponse)
+      
+      // Enrichir les services recommandés avec les données complètes
+      if (projectAnalysis.tasks) {
+        projectAnalysis.tasks = projectAnalysis.tasks.map(task => {
+          if (task.recommendedService && task.recommendedService.id) {
+            const fullService = services.find(s => s.id === task.recommendedService.id)
+            if (fullService) {
+              task.recommendedService = {
+                ...fullService,
+                matchReason: task.recommendedService.matchReason
+              }
+            }
+          }
+          return task
+        })
+      }
+      
+      return projectAnalysis
     } catch (parseError) {
       console.error('Erreur parsing réponse IA:', parseError)
       console.log('Réponse brute de Mistral:', aiResponse)
-      // Fallback: recherche simple par mots-clés
-      return simpleKeywordSearch(query, services)
+      
+      // Fallback: analyse simple
+      return {
+        projectTitle: "Analyse du projet",
+        projectSummary: "Projet analysé automatiquement",
+        tasks: [
+          {
+            title: "Développement global",
+            description: "Développement complet du projet",
+            recommendedService: services.length > 0 ? services[0] : null
+          }
+        ]
+      }
     }
 
   } catch (error) {
     console.error('Erreur API Mistral:', error)
-    // Fallback: recherche simple par mots-clés
-    return simpleKeywordSearch(query, services)
+    
+    // Fallback: analyse simple
+    return {
+      projectTitle: "Analyse du projet",
+      projectSummary: "Projet analysé automatiquement",
+      tasks: [
+        {
+          title: "Développement global", 
+          description: "Développement complet du projet",
+          recommendedService: services.length > 0 ? services[0] : null
+        }
+      ]
+    }
   }
 }
 

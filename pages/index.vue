@@ -104,6 +104,9 @@ const toggleFaq = (index) => {
               🔍
             </button>
           </div>
+          <p class="text-sm text-blue-200 mt-3 text-center">
+            💡 Plus vous êtes précis, plus notre analyse sera personnalisée !
+          </p>
         </div>
       </div>
     </div>
