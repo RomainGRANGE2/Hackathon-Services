@@ -18,6 +18,7 @@
         </template>
         <template #end>
           <div class="flex items-center gap-4">
+            <a v-if="session?.user" href="/contact" class="cursor-pointer p-2 rounded-lg px-4 hover:bg-gray-100 transition-colors">Contact</a>
             <Button v-if="!session?.user" class="cursor-pointer p-2 rounded-lg px-4" @click="goToLogin()">Se connecter</Button>
             <Button v-if="session?.user" class="cursor-pointer text-prime-vue-error bg-red-100 border-0 hover:!bg-red-500 active:!bg-red-800 hover:!border-0 p-2 rounded-lg px-4" @click="logout">Logout</Button>
           </div>
