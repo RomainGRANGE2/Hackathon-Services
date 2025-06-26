@@ -14,6 +14,8 @@ const toast = useToast();
 const searchQuery = ref("");
 const showAnalysisModal = ref(false);
 const projectAnalysis = ref(null);
+const analysisLoading = ref(false);
+const analysisError = ref(null);
 const simpleSearchQuery = ref('');
 const isSimpleSearching = ref(false);
 
@@ -24,8 +26,11 @@ onMounted(async () => {
     searchQuery.value = route.query.search || "";
 
     if (searchQuery.value) {
-      // Si on a une recherche, analyser le projet avec l'IA
+      // Si on a une recherche, ouvrir immédiatement la modal et analyser le projet
+      showAnalysisModal.value = true;
       await analyzeProject();
+      // Charger aussi les services normaux en arrière-plan
+      await loadServices();
     } else {
       // Sinon, charger la liste normale des services
       await loadServices();
@@ -69,21 +74,25 @@ const loadServices = async () => {
 };
 
 const analyzeProject = async () => {
-  const response = await $fetch('/api/services/search', {
-    method: 'POST',
-    body: { query: searchQuery.value }
-  });
-
-  if (response.success) {
-    projectAnalysis.value = response.projectAnalysis;
-    showAnalysisModal.value = true;
-  } else {
-    toast.add({
-      severity: 'error',
-      summary: 'Erreur',
-      detail: 'Impossible d\'analyser votre projet',
-      life: 3000,
+  analysisLoading.value = true;
+  analysisError.value = null;
+  
+  try {
+    const response = await $fetch('/api/services/search', {
+      method: 'POST',
+      body: { query: searchQuery.value }
     });
+
+    if (response.success) {
+      projectAnalysis.value = response.projectAnalysis;
+    } else {
+      analysisError.value = 'Impossible d\'analyser votre projet. Veuillez réessayer.';
+    }
+  } catch (error) {
+    console.error('Erreur analyse projet:', error);
+    analysisError.value = 'Une erreur est survenue lors de l\'analyse. Vérifiez votre connexion et réessayez.';
+  } finally {
+    analysisLoading.value = false;
   }
 };
 
@@ -139,14 +148,23 @@ const clearSimpleSearch = () => {
 
 const closeAnalysisModal = () => {
   showAnalysisModal.value = false;
+  projectAnalysis.value = null;
+  analysisError.value = null;
   // Retourner à la liste normale des services
   navigateTo('/services');
 };
 
 const modifySearch = () => {
   showAnalysisModal.value = false;
+  projectAnalysis.value = null;
+  analysisError.value = null;
   // Retourner à la page d'accueil pour une nouvelle recherche
   navigateTo('/');
+};
+
+const retryAnalysis = () => {
+  analysisError.value = null;
+  analyzeProject();
 };
 
 const navigateToDetails = (id) => {
@@ -171,8 +189,11 @@ watch(simpleSearchQuery, (newValue) => {
     <ProjectAnalysisModal
       :visible="showAnalysisModal"
       :analysis="projectAnalysis"
+      :loading="analysisLoading"
+      :error="analysisError"
       @close="closeAnalysisModal"
       @modify-search="modifySearch"
+      @retry="retryAnalysis"
     />
     
     <div class="flex justify-between items-center mb-6">

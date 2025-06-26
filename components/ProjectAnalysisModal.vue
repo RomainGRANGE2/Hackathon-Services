@@ -7,7 +7,22 @@
     class="project-analysis-modal"
     @update:visible="$emit('close')"
   >
-    <div v-if="analysis" class="space-y-6">
+    <!-- État de chargement -->
+    <div v-if="loading" class="flex flex-col items-center justify-center py-12 space-y-4">
+      <ProgressSpinner />
+      <div class="text-center">
+        <h3 class="text-lg font-semibold text-gray-800 mb-2">🤖 Analyse en cours...</h3>
+        <p class="text-gray-600">Notre IA analyse votre projet et recherche les meilleurs services</p>
+        <div class="mt-4 text-sm text-gray-500">
+          <p>⚡ Décomposition du projet en tâches</p>
+          <p>🔍 Recherche des services adaptés</p>
+          <p>💰 Calcul du budget estimé</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Résultats de l'analyse -->
+    <div v-else-if="analysis" class="space-y-6">
       <!-- Résumé du projet -->
       <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500">
         <h3 class="font-semibold text-blue-900 mb-2">📋 Résumé du projet</h3>
@@ -102,17 +117,35 @@
             </div>
           </div>
         </div>
+      </div>    </div>
+
+    <!-- État d'erreur -->
+    <div v-else-if="error" class="flex flex-col items-center justify-center py-12 space-y-4">
+      <div class="text-center">
+        <div class="text-red-500 text-6xl mb-4">⚠️</div>
+        <h3 class="text-lg font-semibold text-gray-800 mb-2">Erreur lors de l'analyse</h3>
+        <p class="text-gray-600 mb-4">{{ error }}</p>
+        <Button 
+          label="Réessayer" 
+          @click="$emit('retry')"
+          class="mr-2"
+        />
+        <Button 
+          label="Modifier la recherche" 
+          outlined 
+          @click="$emit('modify-search')"
+        />
       </div>
     </div>
 
     <template #footer>
-      <div class="flex justify-between w-full">
+      <div class="flex justify-between w-full" v-if="!loading">
         <Button 
           label="Fermer" 
           text 
           @click="$emit('close')"
         />
-        <div class="space-x-2">
+        <div class="space-x-2" v-if="analysis">
           <Button 
             label="Modifier la recherche" 
             outlined 
@@ -139,10 +172,18 @@ const props = defineProps({
   analysis: {
     type: Object,
     default: null
+  },
+  loading: {
+    type: Boolean,
+    default: false
+  },
+  error: {
+    type: String,
+    default: null
   }
 })
 
-const emit = defineEmits(['close', 'modify-search'])
+const emit = defineEmits(['close', 'modify-search', 'retry'])
 
 // Calcul du total estimé
 const totalEstimate = computed(() => {
