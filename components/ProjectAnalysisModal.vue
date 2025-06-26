@@ -117,6 +117,11 @@
             </div>
           </div>
         </div>
+        <div class="mt-3 p-3 bg-blue-50 border border-blue-200 rounded">
+          <p class="text-sm text-blue-700">
+            💡 En cliquant sur "Contacter", vous enverrez automatiquement une demande personnalisée à chaque freelance avec le contexte complet de votre projet.
+          </p>
+        </div>
       </div>    </div>
 
     <!-- État d'erreur -->
@@ -152,7 +157,8 @@
             @click="$emit('modify-search')"
           />
           <Button 
-            label="Contacter les freelances" 
+            :label="`Contacter ${availableServicesCount} freelance(s)`"
+            :disabled="availableServicesCount === 0"
             @click="contactFreelancers"
           />
         </div>
@@ -193,8 +199,16 @@ const totalEstimate = computed(() => {
     .reduce((total, task) => total + (task.recommendedService.price || 0), 0)
 })
 
+// Nombre de services disponibles pour contact
+const availableServicesCount = computed(() => {
+  if (!props.analysis?.tasks) return 0
+  return props.analysis.tasks.filter(task => task.recommendedService).length
+})
+
 // Voir un service spécifique
 const viewService = (serviceId) => {
+  // Fermer la modal et naviguer vers le service
+  emit('close')
   navigateTo(`/services/${serviceId}`)
 }
 
@@ -206,9 +220,62 @@ const requestService = (task) => {
 }
 
 // Contacter les freelances
-const contactFreelancers = () => {
-  console.log('Contacter les freelances pour ce projet')
-  // Ici on pourrait ouvrir un formulaire de contact global
+const contactFreelancers = async () => {
+  if (!props.analysis) return;
+
+  try {
+    // Préparer les données des services à réserver
+    const servicesToBook = props.analysis.tasks
+      .filter(task => task.recommendedService)
+      .map(task => ({
+        serviceId: task.recommendedService.id,
+        taskTitle: task.title,
+        matchReason: task.recommendedService.matchReason || 'Service recommandé par notre IA'
+      }));
+
+    if (servicesToBook.length === 0) {
+      alert('Aucun service disponible à réserver pour ce projet.');
+      return;
+    }
+
+    // Confirmation avant réservation
+    const confirmMessage = `Vous allez contacter ${servicesToBook.length} freelance(s) pour votre projet "${props.analysis.projectTitle}". 
+
+Services concernés :
+${servicesToBook.map(s => `• ${s.taskTitle}`).join('\n')}
+
+Confirmer les réservations ?`;
+
+    if (!confirm(confirmMessage)) {
+      return;
+    }
+
+    // Appeler l'API de réservation multiple
+    const response = await $fetch('/api/services/book-multiple', {
+      method: 'POST',
+      body: {
+        projectSummary: props.analysis.projectSummary,
+        services: servicesToBook
+      }
+    });
+
+    if (response.success) {
+      alert(`✅ ${response.message}\n\nLes freelances vont être notifiés par email avec tous les détails de votre projet.`);
+      
+      // Optionnel : fermer la modal et rediriger vers les réservations
+      emit('close');
+      navigateTo('/services/myoffers');
+    } else {
+      alert(`❌ Erreur: ${response.message}`);
+      if (response.errors) {
+        console.error('Erreurs détaillées:', response.errors);
+      }
+    }
+
+  } catch (error) {
+    console.error('Erreur lors du contact des freelances:', error);
+    alert('❌ Une erreur est survenue lors de l\'envoi des demandes de contact.');
+  }
 }
 </script>
 
