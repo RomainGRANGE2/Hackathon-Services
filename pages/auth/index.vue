@@ -149,13 +149,15 @@ const messagePt = {
               for="password"
               >Mot de passe</label
             >
-            <InputText
+            <Password
               id="password"
               v-model="form.password"
               name="password"
-              type="password"
               placeholder="Mot de passe"
+              toggleMask
+              :feedback="false"
               :pt="inputPt"
+              class="w-full"
             />
             <Message
               v-if="$form.password?.invalid"

@@ -183,13 +183,15 @@ const messagePt = {
 
           <div class="flex flex-col gap-2">
             <label :class="$form.password?.invalid ? 'text-prime-vue-error' : ''" for="password">Mot de passe</label>
-            <InputText
+            <Password
                 id="password"
                 v-model="form.password"
                 name="password"
-                type="password"
                 placeholder="Mot de passe"
+                toggleMask
+                :feedback="false"
                 :pt="inputPt"
+                class="w-full"
             />
             <Message v-if="$form.password?.invalid" severity="error" size="small" variant="simple" :pt="messagePt">
               {{ $form.password?.error.message }}
