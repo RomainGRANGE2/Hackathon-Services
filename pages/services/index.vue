@@ -286,11 +286,11 @@ watch(simpleSearchQuery, (newValue) => {
                 <div class="flex items-center justify-between">
                   <span>{{ service.title || "Sans titre" }}</span>
                   <div class="flex items-center">
-                    <span v-if="service.service_type === 'ai'" class="text-xs bg-purple-100 text-purple-800 px-2 py-1 rounded-full">
-                      🤖 IA
+                    <span v-if="service.service_type === 'ai'" class="text-xs bg-purple-100 text-purple-800 px-2 py-1 rounded-full flex items-center gap-1">
+                      <span>🤖</span><span>IA</span>
                     </span>
-                    <span v-else class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">
-                      👤 Humain
+                    <span v-else class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full flex items-center gap-1">
+                      <span>👤</span><span>Humain</span>
                     </span>
                   </div>
                 </div>
@@ -313,13 +313,8 @@ watch(simpleSearchQuery, (newValue) => {
                 </div>
               </template>
               <template #content>
-                <p class="text-sm line-clamp-3">
-                  {{ service.description || "Pas de description" }}
-                </p>
-                <div class="flex justify-between items-center mt-4">
-                  <span class="font-bold text-lg"
-                    >{{ service.price || "0" }} €</span
-                  >
+                <div class="flex-grow flex flex-col">
+                  <p class="text-sm line-clamp-3"></p>
                 </div>
               </template>
               <template #footer>
