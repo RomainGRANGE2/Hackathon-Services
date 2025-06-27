@@ -27,8 +27,8 @@ onMounted(async () => {
     const searchType = route.query.type || "";
 
     if (searchQuery.value) {
-      // Si c'est une recherche de catégorie, utiliser la recherche simple
-      if (searchType === 'category') {
+      // Si c'est une recherche de catégorie, utiliser la recherche simpleeee
+      if (searchType === "category") {
         simpleSearchQuery.value = searchQuery.value;
         await performSimpleSearch();
       } else {
