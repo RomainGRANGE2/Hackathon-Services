@@ -3,6 +3,7 @@ import Aura from '@primeuix/themes/aura'
 export default defineNuxtConfig({
   compatibilityDate: '2025-05-15',
   devtools: { enabled: false },
+  css: ['~/assets/css/custom-colors.css'],
   modules: [
     '@nuxtjs/tailwindcss',
     '@primevue/nuxt-module',

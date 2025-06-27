@@ -1,0 +1,285 @@
+/* Personnalisation des couleurs PrimeVue avec la palette primary */
+
+/* Override TOUS les boutons PrimeVue */
+.p-button {
+  background: rgb(87 117 105) !important; /* primary-500 */
+  border-color: rgb(87 117 105) !important;
+  color: white !important;
+}
+
+.p-button:hover {
+  background: rgb(68 93 83) !important; /* primary-600 */
+  border-color: rgb(68 93 83) !important;
+  color: white !important;
+}
+
+.p-button:focus {
+  background: rgb(87 117 105) !important; /* primary-500 */
+  border-color: rgb(87 117 105) !important;
+  box-shadow: 0 0 0 0.2rem rgba(87, 117, 105, 0.3) !important;
+  color: white !important;
+}
+
+.p-button:active {
+  background: rgb(57 76 68) !important; /* primary-700 */
+  border-color: rgb(57 76 68) !important;
+  color: white !important;
+}
+
+/* Boutons outlined */
+.p-button.p-button-outlined {
+  background: transparent !important;
+  border-color: rgb(87 117 105) !important;
+  color: rgb(87 117 105) !important;
+}
+
+.p-button.p-button-outlined:hover {
+  background: rgb(87 117 105) !important;
+  border-color: rgb(87 117 105) !important;
+  color: white !important;
+}
+
+/* Boutons text */
+.p-button.p-button-text {
+  background: transparent !important;
+  border-color: transparent !important;
+  color: rgb(87 117 105) !important;
+}
+
+.p-button.p-button-text:hover {
+  background: rgb(245 248 246) !important; /* primary-50 */
+  border-color: transparent !important;
+  color: rgb(68 93 83) !important; /* primary-600 */
+}
+
+/* Couleurs des boutons success pour utiliser primary */
+.p-button.p-button-success {
+  background: rgb(87 117 105) !important; /* primary-500 */
+  border-color: rgb(87 117 105) !important;
+  color: white !important;
+}
+
+.p-button.p-button-success:hover {
+  background: rgb(68 93 83) !important; /* primary-600 */
+  border-color: rgb(68 93 83) !important;
+  color: white !important;
+}
+
+.p-button.p-button-success:focus {
+  background: rgb(87 117 105) !important; /* primary-500 */
+  border-color: rgb(87 117 105) !important;
+  box-shadow: 0 0 0 0.2rem rgba(87, 117, 105, 0.3) !important;
+  color: white !important;
+}
+
+/* Boutons danger - garder rouge mais adapter */
+.p-button.p-button-danger {
+  background: rgb(185 28 28) !important; /* red-700 */
+  border-color: rgb(185 28 28) !important;
+}
+
+.p-button.p-button-danger:hover {
+  background: rgb(153 27 27) !important; /* red-800 */
+  border-color: rgb(153 27 27) !important;
+}
+
+/* Couleurs des tags/chips */
+.p-tag {
+  background: rgb(223 232 227) !important; /* primary-100 */
+  color: rgb(87 117 105) !important; /* primary-500 */
+}
+
+.p-tag.p-tag-success {
+  background: rgb(87 117 105) !important; /* primary-500 */
+  color: white !important;
+}
+
+/* Couleurs des badges */
+.p-badge {
+  background: rgb(87 117 105) !important; /* primary-500 */
+}
+
+/* Progress spinner */
+.p-progress-spinner .p-progress-spinner-svg .p-progress-spinner-circle {
+  stroke: rgb(87 117 105) !important; /* primary-500 */
+}
+
+/* Dialog header */
+.p-dialog .p-dialog-header {
+  background: rgb(245 248 246) !important; /* primary-50 */
+  border-bottom-color: rgb(223 232 227) !important; /* primary-100 */
+}
+
+/* Input focus */
+.p-inputtext:focus {
+  border-color: rgb(87 117 105) !important; /* primary-500 */
+  box-shadow: 0 0 0 0.2rem rgba(87, 117, 105, 0.2) !important;
+}
+
+.p-textarea:focus {
+  border-color: rgb(87 117 105) !important; /* primary-500 */
+  box-shadow: 0 0 0 0.2rem rgba(87, 117, 105, 0.2) !important;
+}
+
+/* Card hover effects */
+.p-card:hover {
+  box-shadow: 0 10px 25px rgba(87, 117, 105, 0.1) !important;
+}
+
+/* Menu items */
+.p-menubar .p-menubar-root-list > .p-menuitem > .p-menuitem-link:hover {
+  background: rgb(245 248 246) !important; /* primary-50 */
+}
+
+/* Toast */
+.p-toast .p-toast-message.p-toast-message-success .p-toast-message-icon,
+.p-toast .p-toast-message.p-toast-message-success .p-toast-summary {
+  color: rgb(87 117 105) !important; /* primary-500 */
+}
+
+/* Severity colors using primary palette */
+.text-green-600 {
+  color: rgb(87 117 105) !important; /* primary-500 */
+}
+
+.bg-green-50 {
+  background-color: rgb(245 248 246) !important; /* primary-50 */
+}
+
+.border-green-200 {
+  border-color: rgb(191 208 200) !important; /* primary-200 */
+}
+
+/* Blue colors replacement */
+.text-blue-600 {
+  color: rgb(87 117 105) !important; /* primary-500 */
+}
+
+.text-blue-800 {
+  color: rgb(49 62 58) !important; /* primary-800 */
+}
+
+.bg-blue-50 {
+  background-color: rgb(245 248 246) !important; /* primary-50 */
+}
+
+.hover\:text-primary:hover {
+  color: rgb(87 117 105) !important; /* primary-500 */
+}
+
+/* Liens */
+a.text-blue-600 {
+  color: rgb(87 117 105) !important; /* primary-500 */
+}
+
+a.text-blue-600:hover {
+  color: rgb(68 93 83) !important; /* primary-600 */
+}
+
+/* Override des couleurs primaires Aura par défaut */
+:root {
+  --p-primary-50: 245 248 246;
+  --p-primary-100: 223 232 227;
+  --p-primary-200: 191 208 200;
+  --p-primary-300: 151 177 165;
+  --p-primary-400: 111 141 128;
+  --p-primary-500: 87 117 105;
+  --p-primary-600: 68 93 83;
+  --p-primary-700: 57 76 68;
+  --p-primary-800: 49 62 58;
+  --p-primary-900: 43 54 50;
+  --p-primary-950: 22 29 27;
+}
+
+/* Forcer les couleurs primary partout */
+.p-component {
+  --p-primary-color: rgb(87 117 105);
+  --p-primary-contrast-color: rgb(255 255 255);
+  --p-primary-hover-color: rgb(68 93 83);
+  --p-primary-active-color: rgb(57 76 68);
+}
+
+/* Override spécifique pour les éléments focusables */
+.p-inputtext, .p-textarea, .p-dropdown, .p-calendar input {
+  border-color: rgb(209 213 219) !important;
+}
+
+.p-inputtext:focus, .p-textarea:focus, .p-dropdown:focus, .p-calendar input:focus {
+  border-color: rgb(87 117 105) !important;
+  box-shadow: 0 0 0 1px rgba(87, 117, 105, 0.2) !important;
+}
+
+/* CSS ajouté en fin de fichier pour override final */
+
+/* Force absolue sur TOUS les boutons - priorité maximale */
+button.p-button,
+.p-button,
+[data-pc-name="button"] {
+  background-color: rgb(87 117 105) !important;
+  border-color: rgb(87 117 105) !important;
+  color: white !important;
+}
+
+button.p-button:hover,
+.p-button:hover,
+[data-pc-name="button"]:hover {
+  background-color: rgb(68 93 83) !important;
+  border-color: rgb(68 93 83) !important;
+  color: white !important;
+}
+
+button.p-button:focus,
+.p-button:focus,
+[data-pc-name="button"]:focus {
+  background-color: rgb(87 117 105) !important;
+  border-color: rgb(87 117 105) !important;
+  color: white !important;
+  box-shadow: 0 0 0 0.2rem rgba(87, 117, 105, 0.3) !important;
+}
+
+/* Override spécifique pour les boutons outlined */
+button.p-button.p-button-outlined,
+.p-button.p-button-outlined,
+[data-pc-name="button"].p-button-outlined {
+  background-color: transparent !important;
+  border-color: rgb(87 117 105) !important;
+  color: rgb(87 117 105) !important;
+}
+
+button.p-button.p-button-outlined:hover,
+.p-button.p-button-outlined:hover,
+[data-pc-name="button"].p-button-outlined:hover {
+  background-color: rgb(87 117 105) !important;
+  border-color: rgb(87 117 105) !important;
+  color: white !important;
+}
+
+/* Override pour les boutons text */
+button.p-button.p-button-text,
+.p-button.p-button-text,
+[data-pc-name="button"].p-button-text {
+  background-color: transparent !important;
+  border-color: transparent !important;
+  color: rgb(87 117 105) !important;
+}
+
+button.p-button.p-button-text:hover,
+.p-button.p-button-text:hover,
+[data-pc-name="button"].p-button-text:hover {
+  background-color: rgb(245 248 246) !important;
+  border-color: transparent !important;
+  color: rgb(68 93 83) !important;
+}
+
+/* Override pour toutes les variables CSS PrimeVue */
+.p-button {
+  --p-button-primary-background: rgb(87 117 105) !important;
+  --p-button-primary-border-color: rgb(87 117 105) !important;
+  --p-button-primary-color: white !important;
+  --p-button-primary-hover-background: rgb(68 93 83) !important;
+  --p-button-primary-hover-border-color: rgb(68 93 83) !important;
+  --p-button-primary-hover-color: white !important;
+  --p-button-primary-active-background: rgb(57 76 68) !important;
+  --p-button-primary-active-border-color: rgb(57 76 68) !important;
+  --p-button-primary-active-color: white !important;
+}

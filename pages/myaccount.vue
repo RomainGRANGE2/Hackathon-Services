@@ -160,7 +160,7 @@ const formatDate = (dateString) => {
               </div>
             </div>
             <div class="text-right">
-              <div class="text-2xl font-bold text-green-600 mb-1">
+              <div class="text-2xl font-bold text-primary-600 mb-1">
                 {{ reservation.service_price }} €
               </div>
             </div>
@@ -235,7 +235,7 @@ const formatDate = (dateString) => {
               v-else-if="reservation.status === 'accepted'"
               class="pt-4 border-t"
             >
-              <div class="flex items-center gap-2 text-green-600">
+              <div class="flex items-center gap-2 text-primary-600">
                 <i class="pi pi-check-circle"></i>
                 <span class="font-medium">Réservation acceptée</span>
               </div>
