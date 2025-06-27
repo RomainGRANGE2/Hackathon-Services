@@ -21,16 +21,23 @@ const isSimpleSearching = ref(false);
 
 onMounted(async () => {
   try {
-    // Récupérer le paramètre de recherche depuis l'URL
+    // Récupérer les paramètres de recherche depuis l'URL
     const route = useRoute();
     searchQuery.value = route.query.search || "";
+    const searchType = route.query.type || "";
 
     if (searchQuery.value) {
-      // Si on a une recherche, ouvrir immédiatement la modal et analyser le projettteeeeeee
-      showAnalysisModal.value = true;
-      await analyzeProject();
-      // Charger aussi les services normaux en arrière-plan
-      await loadServices();
+      // Si c'est une recherche de catégorie, utiliser la recherche simple
+      if (searchType === 'category') {
+        simpleSearchQuery.value = searchQuery.value;
+        await performSimpleSearch();
+      } else {
+        // Sinon, c'est une description de projet complexe
+        showAnalysisModal.value = true;
+        await analyzeProject();
+        // Charger aussi les services normaux en arrière-plan
+        await loadServices();
+      }
     } else {
       // Sinon, charger la liste normale des services
       await loadServices();
@@ -200,22 +207,6 @@ watch(simpleSearchQuery, (newValue) => {
       @retry="retryAnalysis"
     />
 
-    <div class="flex justify-between items-center mb-6">
-      <div>
-        <h1 class="text-2xl font-bold">Services</h1>
-        <p v-if="searchQuery && !showAnalysisModal" class="text-gray-600 mt-1">
-          Analyse terminée pour : "{{ searchQuery }}"
-          <Button
-            label="Voir l'analyse"
-            text
-            size="small"
-            class="ml-2"
-            @click="showAnalysisModal = true"
-          />
-        </p>
-      </div>
-    </div>
-
     <!-- Barre de recherche simple -->
     <div class="mb-6">
       <div class="max-w-md">
@@ -253,7 +244,7 @@ watch(simpleSearchQuery, (newValue) => {
           </div>
         </div>
         <p v-if="simpleSearchQuery" class="text-sm text-gray-500 mt-1">
-          {{ services.length }} service(s) trouvé(s) par l'IA pour "{{
+          {{ services.length }} service(s) trouvé(s) pour "{{
             simpleSearchQuery
           }}"
         </p>

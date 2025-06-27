@@ -64,6 +64,11 @@ const faqItems = ref([
 const toggleFaq = (index) => {
   faqItems.value[index].isOpen = !faqItems.value[index].isOpen
 }
+
+// Fonction pour gérer le clic sur une catégorie
+const handleCategoryClick = (categoryName) => {
+  navigateTo(`/services?search=${encodeURIComponent(categoryName)}&type=category`)
+}
 </script>
 
 <template>
@@ -172,6 +177,7 @@ const toggleFaq = (index) => {
         v-for="category in categories" 
         :key="category.name"
         class="bg-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer group"
+        @click="handleCategoryClick(category.name)"
       >
         <div class="p-4 text-center">
           <div 
