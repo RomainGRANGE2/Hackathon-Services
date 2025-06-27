@@ -1,4 +1,4 @@
-import { service } from '~/server/utils/service.js'
+import { service } from "~/server/utils/service"
 
 export default defineEventHandler(async (event) => {
   try {
@@ -49,7 +49,7 @@ export default defineEventHandler(async (event) => {
     }))
 
     // Appeler l'IA pour décomposer le projet et trouver les services
-    const projectAnalysis = await analyzeProjectWithAI(query, servicesForAI)
+    const projectAnalysis = await analyzeProjectWithAI(query, servicesForAI, allServices)
     
     return {
       success: true,
@@ -67,7 +67,7 @@ export default defineEventHandler(async (event) => {
 })
 
 // Fonction pour analyser le projet et trouver les services correspondants
-async function analyzeProjectWithAI(projectPitch, services) {
+async function analyzeProjectWithAI(projectPitch, services, allServices) {
   try {
     const prompt = `
 Tu es un expert en gestion de projet digital. L'utilisateur te décrit son projet et tu dois :
@@ -115,6 +115,11 @@ Retourne UNIQUEMENT un objet JSON avec cette structure exacte :
 Si aucun service ne correspond à une tâche, mets "recommendedService": null
 `
 
+    // Vérifier la clé API
+    if (!process.env.MISTRAL_API_KEY) {
+      throw new Error('Clé API Mistral non configurée')
+    }
+
     // Utilisation de Mistral AI
     const response = await $fetch('https://api.mistral.ai/v1/chat/completions', {
       method: 'POST',
@@ -145,7 +150,7 @@ Si aucun service ne correspond à une tâche, mets "recommendedService": null
       if (projectAnalysis.tasks) {
         projectAnalysis.tasks = projectAnalysis.tasks.map(task => {
           if (task.recommendedService && task.recommendedService.id) {
-            const fullService = services.find(s => s.id === task.recommendedService.id)
+            const fullService = allServices.find(s => s.id === task.recommendedService.id)
             if (fullService) {
               task.recommendedService = {
                 ...fullService,
@@ -160,7 +165,6 @@ Si aucun service ne correspond à une tâche, mets "recommendedService": null
       return projectAnalysis
     } catch (parseError) {
       console.error('Erreur parsing réponse IA:', parseError)
-      console.log('Réponse brute de Mistral:', aiResponse)
       
       // Fallback: analyse simple
       return {
@@ -170,7 +174,7 @@ Si aucun service ne correspond à une tâche, mets "recommendedService": null
           {
             title: "Développement global",
             description: "Développement complet du projet",
-            recommendedService: services.length > 0 ? services[0] : null
+            recommendedService: allServices.length > 0 ? allServices[0] : null
           }
         ]
       }
@@ -187,7 +191,7 @@ Si aucun service ne correspond à une tâche, mets "recommendedService": null
         {
           title: "Développement global", 
           description: "Développement complet du projet",
-          recommendedService: services.length > 0 ? services[0] : null
+          recommendedService: allServices.length > 0 ? allServices[0] : null
         }
       ]
     }
@@ -195,10 +199,10 @@ Si aucun service ne correspond à une tâche, mets "recommendedService": null
 }
 
 // Fonction de fallback pour recherche simple
-function simpleKeywordSearch(query, services) {
+function simpleKeywordSearch(query, allServices) {
   const searchTerms = query.toLowerCase().split(' ')
   
-  return services.filter(service => {
+  return allServices.filter(service => {
     const searchableText = `
       ${service.title} 
       ${service.description} 
