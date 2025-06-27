@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { useToast } from "primevue/usetoast";
 import { useRoute, useRouter } from "vue-router";
 import { CubeIcon, ExclamationTriangleIcon } from "@heroicons/vue/24/outline";
@@ -25,11 +25,18 @@ const bookingForm = ref({
 });
 const booking = ref(false);
 
+// État pour les services IA
+const isAiService = ref(false);
+
 // Récupérer les données directement au lieu d'utiliser onMounted
 const response = await $fetch(`/api/services/list/${serviceId}`);
 if (response.success) {
   service.value = response.service;
   isOwner.value = response.isOwner;
+  
+  // Marquer si c'est un service IA
+  isAiService.value = service.value.service_type === 'ai';
+  
   // Gestion des tags
   if (service.value.tag && typeof service.value.tag === "string") {
     try {
@@ -49,6 +56,13 @@ if (response.success) {
   });
 }
 loading.value = false;
+
+// Redirection côté client pour les services IA
+onMounted(() => {
+  if (isAiService.value) {
+    navigateTo(`/ai-service/${serviceId}`);
+  }
+});
 
 const updateServiceStatus = async (newStatus) => {
   try {

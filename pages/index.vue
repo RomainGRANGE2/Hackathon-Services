@@ -32,6 +32,31 @@ const categories = [
   { icon: '🌐', name: 'DevOps', color: 'bg-orange-500' }
 ]
 
+// Services IA disponibles
+const aiServices = ref([
+  { 
+    icon: '🌍', 
+    name: 'Traduction IA', 
+    description: 'Traduction instantanée de documents',
+    color: 'bg-gradient-to-r from-blue-500 to-cyan-500',
+    price: '5€'
+  },
+  { 
+    icon: '📄', 
+    name: 'Résumé IA', 
+    description: 'Génération de résumés automatiques',
+    color: 'bg-gradient-to-r from-green-500 to-emerald-500',
+    price: '3€'
+  },
+  { 
+    icon: '✍️', 
+    name: 'Correction IA', 
+    description: 'Correction orthographique avancée',
+    color: 'bg-gradient-to-r from-purple-500 to-pink-500',
+    price: '2€'
+  }
+])
+
 // FAQ
 const faqItems = ref([
   {
@@ -68,6 +93,11 @@ const toggleFaq = (index) => {
 // Fonction pour gérer le clic sur une catégorie
 const handleCategoryClick = (categoryName) => {
   navigateTo(`/services?search=${encodeURIComponent(categoryName)}&type=category`)
+}
+
+// Fonction pour naviguer vers les services IA
+const handleAiServiceClick = (serviceName) => {
+  navigateTo(`/services?search=${encodeURIComponent(serviceName)}&type=category`)
 }
 </script>
 
@@ -188,6 +218,67 @@ const handleCategoryClick = (categoryName) => {
           <h3 class="text-sm font-semibold text-gray-800 group-hover:text-primary transition-colors">
             {{ category.name }}
           </h3>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section Services IA -->
+    <div class="bg-gradient-to-r from-purple-50 to-blue-50 py-16 px-6 mt-12">
+      <div class="max-w-6xl mx-auto">
+        <div class="text-center mb-12">
+          <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
+            🤖 Services IA Instantanés
+          </h2>
+          <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+            Découvrez nos services alimentés par l'intelligence artificielle pour des résultats instantanés
+          </p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div 
+            v-for="aiService in aiServices" 
+            :key="aiService.name"
+            class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer group"
+            @click="handleAiServiceClick(aiService.name)"
+          >
+            <div class="p-6">
+              <div 
+                :class="`${aiService.color} w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300`"
+              >
+                <span class="text-3xl">{{ aiService.icon }}</span>
+              </div>
+              <h3 class="text-xl font-bold text-gray-800 text-center mb-2">
+                {{ aiService.name }}
+              </h3>
+              <p class="text-gray-600 text-center mb-4">
+                {{ aiService.description }}
+              </p>
+              <div class="flex items-center justify-between">
+                <span class="text-2xl font-bold text-gray-800">{{ aiService.price }}</span>
+                <div class="flex items-center text-purple-600">
+                  <span class="text-sm font-medium">Instantané</span>
+                  <span class="ml-2">⚡</span>
+                </div>
+              </div>
+              <div class="mt-4 pt-4 border-t border-gray-100">
+                <div class="flex items-center justify-center text-sm text-gray-500">
+                  <span class="inline-flex items-center">
+                    <span class="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
+                    Disponible 24/7
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="text-center mt-12">
+          <button 
+            class="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-8 py-3 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105"
+            @click="navigateTo('/services')"
+          >
+            Voir tous les services IA
+          </button>
         </div>
       </div>
     </div>

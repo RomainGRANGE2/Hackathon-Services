@@ -58,9 +58,24 @@
           <div v-if="task.recommendedService" class="bg-green-50 border border-green-200 rounded-lg p-4 mt-3">
             <div class="flex justify-between items-start">
               <div class="flex-1">
-                <h5 class="font-semibold text-green-900 mb-2">
-                  ✅ {{ task.recommendedService.title }}
-                </h5>
+                <div class="flex items-center gap-2 mb-2">
+                  <h5 class="font-semibold text-green-900">
+                    ✅ {{ task.recommendedService.title }}
+                  </h5>
+                  <!-- Badge pour le type de service -->
+                  <Badge 
+                    v-if="task.recommendedService.service_type === 'ai'"
+                    value="🤖 IA"
+                    severity="info"
+                    class="text-xs"
+                  />
+                  <Badge 
+                    v-else
+                    value="👤 Humain"
+                    severity="secondary"
+                    class="text-xs"
+                  />
+                </div>
                 <p class="text-green-800 text-sm mb-2">
                   {{ task.recommendedService.description }}
                 </p>
@@ -71,7 +86,16 @@
                   <span class="text-green-900 font-bold text-lg">
                     {{ task.recommendedService.price }}€
                   </span>
+                  <!-- Bouton différent selon le type de service -->
                   <Button 
+                    v-if="task.recommendedService.service_type === 'ai'"
+                    label="Utiliser l'IA" 
+                    size="small" 
+                    class="bg-blue-600 hover:bg-blue-700"
+                    @click="useAiService(task.recommendedService.id)"
+                  />
+                  <Button 
+                    v-else
                     label="Voir le service" 
                     size="small" 
                     class="bg-green-600 hover:bg-green-700"
@@ -119,7 +143,10 @@
         </div>
         <div class="mt-3 p-3 bg-blue-50 border border-blue-200 rounded">
           <p class="text-sm text-blue-700">
-            💡 En cliquant sur "Contacter", vous enverrez automatiquement une demande personnalisée à chaque freelance avec le contexte complet de votre projet.
+            💡 En cliquant sur "Contacter", vous enverrez automatiquement une demande personnalisée à chaque freelance humain avec le contexte complet de votre projet.
+          </p>
+          <p class="text-sm text-blue-600 mt-1">
+            🤖 Les services IA sont utilisables instantanément sans réservation.
           </p>
         </div>
       </div>    </div>
@@ -199,17 +226,24 @@ const totalEstimate = computed(() => {
     .reduce((total, task) => total + (task.recommendedService.price || 0), 0)
 })
 
-// Nombre de services disponibles pour contact
+// Nombre de services humains disponibles pour contact (exclut les services IA)
 const availableServicesCount = computed(() => {
   if (!props.analysis?.tasks) return 0
-  return props.analysis.tasks.filter(task => task.recommendedService).length
+  return props.analysis.tasks.filter(task => 
+    task.recommendedService && task.recommendedService.service_type !== 'ai'
+  ).length
 })
 
 // Voir un service spécifique
 const viewService = (serviceId) => {
-  // Fermer la modal et naviguer vers le service
-  emit('close')
-  navigateTo(`/services/${serviceId}`)
+  // Ouvrir dans un nouvel onglet
+  window.open(`/services/${serviceId}`, '_blank')
+}
+
+// Utiliser un service IA
+const useAiService = (serviceId) => {
+  // Ouvrir dans un nouvel onglet
+  window.open(`/ai-service/${serviceId}`, '_blank')
 }
 
 // Demander un service pour une tâche sans service disponible
@@ -219,14 +253,14 @@ const requestService = (task) => {
   // Ou rediriger vers une page de contact
 }
 
-// Contacter les freelances
+// Contacter les freelances (services humains uniquement)
 const contactFreelancers = async () => {
   if (!props.analysis) return;
 
   try {
-    // Préparer les données des services à réserver
+    // Préparer les données des services humains uniquement (exclut les services IA)
     const servicesToBook = props.analysis.tasks
-      .filter(task => task.recommendedService)
+      .filter(task => task.recommendedService && task.recommendedService.service_type !== 'ai')
       .map(task => ({
         serviceId: task.recommendedService.id,
         taskTitle: task.title,
@@ -234,15 +268,17 @@ const contactFreelancers = async () => {
       }));
 
     if (servicesToBook.length === 0) {
-      alert('Aucun service disponible à réserver pour ce projet.');
+      alert('Aucun service humain disponible à réserver pour ce projet. Vous pouvez utiliser les services IA directement en cliquant sur les boutons "Utiliser l\'IA".');
       return;
     }
 
     // Confirmation avant réservation
-    const confirmMessage = `Vous allez contacter ${servicesToBook.length} freelance(s) pour votre projet "${props.analysis.projectTitle}". 
+    const confirmMessage = `Vous allez contacter ${servicesToBook.length} freelance(s) humain(s) pour votre projet "${props.analysis.projectTitle}". 
 
-Services concernés :
+Services humains concernés :
 ${servicesToBook.map(s => `• ${s.taskTitle}`).join('\n')}
+
+Note : Les services IA peuvent être utilisés directement sans réservation.
 
 Confirmer les réservations ?`;
 
@@ -260,7 +296,7 @@ Confirmer les réservations ?`;
     });
 
     if (response.success) {
-      alert(`✅ ${response.message}\n\nLes freelances vont être notifiés par email avec tous les détails de votre projet.`);
+      alert(`✅ ${response.message}\n\nLes freelances humains vont être notifiés par email avec tous les détails de votre projet.`);
       
       // Optionnel : fermer la modal et rediriger vers les réservations
       emit('close');

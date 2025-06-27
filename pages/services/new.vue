@@ -16,7 +16,9 @@ const service = ref({
   description: '',
   price: null,
   tag: [],
-  status: 'pending'
+  status: 'pending',
+  service_type: 'human', // Toujours humain pour les utilisateurs
+  ai_config: null
 })
 
 const loading = ref(false)

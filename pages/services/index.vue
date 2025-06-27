@@ -182,6 +182,10 @@ const navigateToDetails = (id) => {
   navigateTo(`/services/${id}`);
 };
 
+const navigateToAiService = (id) => {
+  navigateTo(`/ai-service/${id}`);
+};
+
 // Watcher pour recherche en temps réel avec debounce
 let searchTimeout;
 watch(simpleSearchQuery, (newValue) => {
@@ -279,7 +283,17 @@ watch(simpleSearchQuery, (newValue) => {
                 </div>
               </template>
               <template #title>
-                {{ service.title || "Sans titre" }}
+                <div class="flex items-center justify-between">
+                  <span>{{ service.title || "Sans titre" }}</span>
+                  <div class="flex items-center">
+                    <span v-if="service.service_type === 'ai'" class="text-xs bg-purple-100 text-purple-800 px-2 py-1 rounded-full">
+                      🤖 IA
+                    </span>
+                    <span v-else class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">
+                      👤 Humain
+                    </span>
+                  </div>
+                </div>
               </template>
               <template #subtitle>
                 <div
@@ -311,6 +325,14 @@ watch(simpleSearchQuery, (newValue) => {
               <template #footer>
                 <div class="flex justify-center">
                   <Button
+                    v-if="service.service_type === 'ai'"
+                    label="Utiliser l'IA"
+                    icon="pi pi-bolt"
+                    class="w-full bg-purple-600 hover:bg-purple-700"
+                    @click="navigateToAiService(service.id)"
+                  />
+                  <Button
+                    v-else
                     label="Voir détails"
                     icon="pi pi-search"
                     class="w-full"

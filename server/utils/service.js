@@ -35,7 +35,9 @@ export const service = () => {
   // Fonction pour récupérer tous les services SAUF ceux de l'utilisateur connecté
   const getServicesExcludingUser = async function (userId) {
     try {
-      const result = await query('SELECT * FROM "service" WHERE user_id != $1', [
+      // Récupérer tous les services qui ne sont pas créés par l'utilisateur
+      // Cela inclut les services IA (user_id = null) et les services d'autres utilisateurs
+      const result = await query('SELECT * FROM "service" WHERE user_id != $1 OR user_id IS NULL', [
         userId,
       ]);
       return result.rows;
@@ -46,14 +48,19 @@ export const service = () => {
 
   const createService = async function (body, userId) {
     try {
+      // Pour les services IA, userId peut être null (services système)
+      const actualUserId = body.service_type === 'ai' ? null : userId;
+      
       const result = await query(
-        'INSERT INTO "service" (user_id, title, description, price,tag) VALUES ($1, $2, $3, $4, $5)',
+        'INSERT INTO "service" (user_id, title, description, price, tag, service_type, ai_config) VALUES ($1, $2, $3, $4, $5, $6, $7)',
         [
-          userId,
+          actualUserId,
           body.title,
           body.description,
           body.price,
           JSON.stringify(body.tag),
+          body.service_type || 'human',
+          body.ai_config ? JSON.stringify(body.ai_config) : null
         ]
       );
       return result.rows;
